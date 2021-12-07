@@ -16,11 +16,11 @@ public class DynamicSqlParam {
 
     private From from;
 
-    private Where where;
+    private Where<Object> where;
 
     private List<GroupBy> groupBys;
 
-    private Having having;
+    private Having<Object> having;
 
     private List<OrderBy> orderBys;
 
@@ -40,11 +40,11 @@ public class DynamicSqlParam {
         this.from = from;
     }
 
-    public Where getWhere() {
+    public Where<Object> getWhere() {
         return where;
     }
 
-    public void setWhere(Where where) {
+    public void setWhere(Where<Object> where) {
         this.where = where;
     }
 

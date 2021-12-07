@@ -56,63 +56,63 @@ public class Having<T> {
                 '}';
     }
 
-    public Having<T> and(Having having){
+    public Having<T> and(Having<T> having){
         if (!Objects.isNull(having)) {
             this.connect(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having andPart(Having having) {
+    public Having<T> andPart(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.connectPart(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having partAnd(Having having) {
+    public Having<T> partAnd(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.partConnect(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having partAndPart(Having having) {
+    public Having<T> partAndPart(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.partConnectPart(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having<T> or(Having having){
+    public Having<T> or(Having<T> having){
         if (!Objects.isNull(having)) {
             this.connect(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having orPart(Having having) {
+    public Having<T> orPart(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.connectPart(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having partOr(Having having) {
+    public Having<T> partOr(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.partConnect(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having partOrPart(Having having) {
+    public Having<T> partOrPart(Having<T> having) {
         if (!Objects.isNull(having)) {
             this.partConnectPart(having,AndOr.OR);
         }
         return this;
     }
 
-    private Having getLast(Having having) {
+    private Having<T> getLast(Having<T> having) {
         while (!Objects.isNull(having)) {
             if (!Objects.isNull(having.getHaving())) {
                 having = having.getHaving();
@@ -123,7 +123,7 @@ public class Having<T> {
         return having;
     }
 
-    private Having partConnect(Having having,AndOr andOr) {
+    private Having<T> partConnect(Having<T> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addPreBracket();
             this.connect(having,andOr);
@@ -131,7 +131,7 @@ public class Having<T> {
         return this;
     }
 
-    private Having connectPart(Having having,AndOr andOr) {
+    private Having<T> connectPart(Having<T> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addNextBracket(having);
             this.connect(having,andOr);
@@ -139,7 +139,7 @@ public class Having<T> {
         return this;
     }
 
-    private Having partConnectPart(Having having,AndOr andOr) {
+    private Having<T> partConnectPart(Having<T> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addPreBracket();
             this.addNextBracket(having);
@@ -148,7 +148,7 @@ public class Having<T> {
         return this;
     }
 
-    private Having connect(Having having, AndOr andOr) {
+    private Having<T> connect(Having<T> having, AndOr andOr) {
         if (!Objects.isNull(having)) {
             having.setAndOr(andOr);
             this.last.setHaving(having);
@@ -162,7 +162,7 @@ public class Having<T> {
         this.getLast(this).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
-    private void addNextBracket(Having having) {
+    private void addNextBracket(Having<T> having) {
         having.getBrackets().add(Bracket.LEFTBRACKET);
         this.getLast(having).getBrackets().add(Bracket.RIGHTBRACKET);
     }

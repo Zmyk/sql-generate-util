@@ -26,7 +26,7 @@ public class DynamicSqlTest {
                         new Select("user","salary","薪资", ColumnOper.SUM),
                         new Select("department","name","部门", ColumnOper.NONE),
                         new Select("role","name","角色", ColumnOper.NONE)));
-        //构造from   andPart orPart 调用方和参数部分整体加括号   and or  不加
+        //构造from
         param.setFrom(
                 new From("user").as("u").leftJoin("department").as("d1").on(
                                                                 new On("u","id", CondOper.EQUAL,"d1","user_id").or(new On("u","name",CondOper.EQUAL,"d1","user_name"))

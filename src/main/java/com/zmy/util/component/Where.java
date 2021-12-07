@@ -78,7 +78,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> and(Where where){
+    public Where<T> and(Where<T> where){
         if (!Objects.isNull(where)) {
             this.connect(where,AndOr.AND);
         }
@@ -90,7 +90,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> andPart(Where<Object> where){
+    public Where<T> andPart(Where<T> where){
         if (!Objects.isNull(where)) {
             this.connectPart(where,AndOr.AND);
         }
@@ -102,7 +102,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partAnd(Where<Object> where){
+    public Where<T> partAnd(Where<T> where){
         if (!Objects.isNull(where)) {
             this.partConnect(where,AndOr.AND);
         }
@@ -114,7 +114,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partAndPart(Where<Object> where){
+    public Where<T> partAndPart(Where<T> where){
         if (!Objects.isNull(where)) {
             this.partConnectPart(where,AndOr.AND);
         }
@@ -126,7 +126,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> or(Where where){
+    public Where<T> or(Where<T> where){
         if (!Objects.isNull(where)) {
             this.connect(where,AndOr.OR);
         }
@@ -138,7 +138,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> orPart(Where<Object> where){
+    public Where<T> orPart(Where<T> where){
         if (!Objects.isNull(where)) {
             this.connectPart(where,AndOr.OR);
         }
@@ -150,7 +150,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partOr(Where<Object> where){
+    public Where<T> partOr(Where<T> where){
         if (!Objects.isNull(where)) {
             this.partConnect(where,AndOr.OR);
         }
@@ -162,14 +162,14 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partOrPart(Where<Object> where){
+    public Where<T> partOrPart(Where<T> where){
         if (!Objects.isNull(where)) {
             this.partConnectPart(where,AndOr.OR);
         }
         return this;
     }
 
-    private Where getLast(Where where) {
+    private Where<T> getLast(Where<T> where) {
         while (!Objects.isNull(where)) {
             if (!Objects.isNull(where.getWhere())) {
                 where = where.getWhere();
@@ -185,7 +185,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where partConnect(Where where,AndOr andOr) {
+    private Where<T> partConnect(Where<T> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addPreBracket();
             this.connect(where, andOr);
@@ -198,7 +198,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where connectPart(Where where,AndOr andOr) {
+    private Where<T> connectPart(Where<T> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addNextBracket(where);
             this.connect(where, andOr);
@@ -211,7 +211,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where partConnectPart(Where where,AndOr andOr) {
+    private Where<T> partConnectPart(Where<T> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addPreBracket();
             this.addNextBracket(where);
@@ -225,7 +225,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where connect(Where where,AndOr andOr) {
+    private Where<T> connect(Where<T> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             where.setAndOr(andOr);
             this.last.setWhere(where);
@@ -248,7 +248,7 @@ public class Where<T> {
      * 参数方加整体括号
      * @param where
      */
-    private void addNextBracket(Where where) {
+    private void addNextBracket(Where<T> where) {
         where.getBrackets().add(Bracket.LEFTBRACKET);
         this.getLast(where).getBrackets().add(Bracket.RIGHTBRACKET);
     }

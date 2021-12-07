@@ -4,12 +4,12 @@ package com.zmy.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.sun.tools.javac.util.StringUtils;
 import com.zmy.util.component.*;
 import com.zmy.util.enums.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @program: business-receipt-build-tool-parent
@@ -36,7 +36,7 @@ public class DynamicSqlUtil {
         From from = param.getFrom();
         result.append(handlerFrom(from));
         //where
-        Where where = param.getWhere();
+        Where<Object> where = param.getWhere();
         if (where != null) {
             result.append("where ")
                     .append(handlerWhere(where));
@@ -71,7 +71,7 @@ public class DynamicSqlUtil {
      */
     private static String handlerSelects(List<Select> selects){
         if (CollectionUtil.isEmpty(selects)) {
-            return "*";
+            return " * ";
         }
         StringBuilder result = new StringBuilder("");
         for (int i = 0;i < selects.size();i++) {
@@ -113,6 +113,9 @@ public class DynamicSqlUtil {
      * @Date: 2020/12/29
      */
     private static String handlerFrom(From from) {
+        if (Objects.isNull(from)) {
+            return " 黑人问号 ";
+        }
         StringBuilder result = new StringBuilder("");
         while (from != null) {
             String table = from.getTable();
@@ -195,7 +198,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerWhere(Where where) {
+    private static String handlerWhere(Where<Object> where) {
         StringBuilder result = new StringBuilder("");
         while (where != null) {
             List<Bracket> brackets = where.getBrackets();
