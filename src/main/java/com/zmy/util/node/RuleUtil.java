@@ -17,11 +17,11 @@ import java.util.Objects;
 public class RuleUtil {
 
 
-    public static Where<Object> handler(Node firstNode, Map<String,Where<Object>> keyWhere) {
+    public static Where<Object> handler(RuleNode firstRuleNode, Map<String,Where<Object>> keyWhere) {
         for (String s : keyWhere.keySet()) {
-            firstNode = split(firstNode, s, keyWhere.get(s));
+            firstRuleNode = split(firstRuleNode, s, keyWhere.get(s));
         }
-        return merge(firstNode);
+        return merge(firstRuleNode);
     }
 
     /**
@@ -31,44 +31,44 @@ public class RuleUtil {
      * @Author: zhangmy
      * @Date: 2021/2/22 14:31
      */
-    private static Node split(Node firstNode, String splitStr, Where<Object> connectWhere){
+    private static RuleNode split(RuleNode firstRuleNode, String splitStr, Where<Object> connectWhere){
         boolean isCurrentNodeIsFirstNode = true;
-        Node newFirstNode = firstNode;
-        Node previousNode = null;
-        Node nextNode = firstNode.getNextNode();
-        Node currentNode = firstNode;
-        while (!Objects.isNull(currentNode)) {
-            String value = currentNode.getRule();
+        RuleNode newFirstRuleNode = firstRuleNode;
+        RuleNode previousRuleNode = null;
+        RuleNode nextRuleNode = firstRuleNode.getNextRuleNode();
+        RuleNode currentRuleNode = firstRuleNode;
+        while (!Objects.isNull(currentRuleNode)) {
+            String value = currentRuleNode.getRule();
             if (value.contains(splitStr)) {
                 //当前节点一分二，断开重组
                 String[] split = value.split(splitStr);
-                Node node1 = new Node(split[0]);
-                node1.setConnectWhere(connectWhere);
-                Node node2 = new Node(split[1]);
-                node2.setConnectWhere(currentNode.getConnectWhere());
-                node1.setNextNode(node2);
-                node1.setPreNode(previousNode);
-                node2.setNextNode(nextNode);
-                node2.setPreNode(node1);
-                if (!Objects.isNull(previousNode)) {
-                    previousNode.setNextNode(node1);
+                RuleNode ruleNode1 = new RuleNode(split[0]);
+                ruleNode1.setConnectWhere(connectWhere);
+                RuleNode ruleNode2 = new RuleNode(split[1]);
+                ruleNode2.setConnectWhere(currentRuleNode.getConnectWhere());
+                ruleNode1.setNextRuleNode(ruleNode2);
+                ruleNode1.setPreRuleNode(previousRuleNode);
+                ruleNode2.setNextRuleNode(nextRuleNode);
+                ruleNode2.setPreRuleNode(ruleNode1);
+                if (!Objects.isNull(previousRuleNode)) {
+                    previousRuleNode.setNextRuleNode(ruleNode1);
                 }
-                if (!Objects.isNull(nextNode)) {
-                    nextNode.setPreNode(node2);
+                if (!Objects.isNull(nextRuleNode)) {
+                    nextRuleNode.setPreRuleNode(ruleNode2);
                 }
                 if (isCurrentNodeIsFirstNode) {
-                    newFirstNode = node1;
+                    newFirstRuleNode = ruleNode1;
                 }
                 break;
             }
-            previousNode = currentNode;
-            currentNode = currentNode.getNextNode();
+            previousRuleNode = currentRuleNode;
+            currentRuleNode = currentRuleNode.getNextRuleNode();
             isCurrentNodeIsFirstNode = false;
-            if (!Objects.isNull(currentNode)) {
-                nextNode = currentNode.getNextNode();
+            if (!Objects.isNull(currentRuleNode)) {
+                nextRuleNode = currentRuleNode.getNextRuleNode();
             }
         }
-        return newFirstNode;
+        return newFirstRuleNode;
     }
 
     /**
@@ -78,11 +78,11 @@ public class RuleUtil {
      * @Author: zhangmy
      * @Date: 2021/2/22 15:12//当前节点的where已经合并到前一个节点，删除当前节点，删除前节点的一个左括号，删除后节点的一个右括号
      */
-    private static Where<Object> merge(Node firstNode) {
-        Node currentNode = firstNode;
-        while (!Objects.isNull(currentNode)) {
-            if (isNeedToJoin(currentNode)) {//需要和前一个节点合并
-                Node preNode = currentNode.getPreNode();
+    private static Where<Object> merge(RuleNode firstRuleNode) {
+        RuleNode currentRuleNode = firstRuleNode;
+        while (!Objects.isNull(currentRuleNode)) {
+            if (isNeedToJoin(currentRuleNode)) {//需要和前一个节点合并
+                RuleNode preRuleNode = currentRuleNode.getPreRuleNode();
                 /**
                  * 一共三步：
                  * 将该节点的where条件连接到前一个节点的where中
@@ -90,57 +90,57 @@ public class RuleUtil {
                  * 去括号
                  */
                 //将该节点的where条件连接到前一个节点的where中
-                Boolean isPreClose = preNode.getIsClose();
-                Boolean isCuClose = currentNode.getIsClose();
-                Where<Object> connectWhere = currentNode.getConnectWhere();
-                if (isAnd(currentNode)) {
+                Boolean isPreClose = preRuleNode.getIsClose();
+                Boolean isCuClose = currentRuleNode.getIsClose();
+                Where<Object> connectWhere = currentRuleNode.getConnectWhere();
+                if (isAnd(currentRuleNode)) {
                     if (isPreClose && isCuClose) {
-                        preNode.getConnectWhere().partAndPart(connectWhere);
+                        preRuleNode.getConnectWhere().partAndPart(connectWhere);
                     } else if (isPreClose) {
-                        preNode.getConnectWhere().partAnd(connectWhere);
+                        preRuleNode.getConnectWhere().partAnd(connectWhere);
                     } else if (isCuClose) {
-                        preNode.getConnectWhere().andPart(connectWhere);
+                        preRuleNode.getConnectWhere().andPart(connectWhere);
                     } else {
-                        preNode.getConnectWhere().and(connectWhere);
+                        preRuleNode.getConnectWhere().and(connectWhere);
                     }
                 } else {
                     if (isPreClose && isCuClose) {
-                        preNode.getConnectWhere().partOrPart(connectWhere);
+                        preRuleNode.getConnectWhere().partOrPart(connectWhere);
                     } else if (isPreClose) {
-                        preNode.getConnectWhere().partOr(connectWhere);
+                        preRuleNode.getConnectWhere().partOr(connectWhere);
                     } else if (isCuClose) {
-                        preNode.getConnectWhere().orPart(connectWhere);
+                        preRuleNode.getConnectWhere().orPart(connectWhere);
                     } else {
-                        preNode.getConnectWhere().or(connectWhere);
+                        preRuleNode.getConnectWhere().or(connectWhere);
                     }
                 }
                 //设置是否闭合 isClose
-                boolean isClose = isClose(currentNode);
-                preNode.setIsClose(isClose);
+                boolean isClose = isClose(currentRuleNode);
+                preRuleNode.setIsClose(isClose);
                 //去括号
                 if (isClose) {
-                    removeBracket(currentNode);
+                    removeBracket(currentRuleNode);
                 }
-                preNode.setNextNode(currentNode.getNextNode());
-                currentNode.getNextNode().setPreNode(preNode);
-                currentNode = preNode;
+                preRuleNode.setNextRuleNode(currentRuleNode.getNextRuleNode());
+                currentRuleNode.getNextRuleNode().setPreRuleNode(preRuleNode);
+                currentRuleNode = preRuleNode;
 
             }
-            currentNode = currentNode.getNextNode();
+            currentRuleNode = currentRuleNode.getNextRuleNode();
         }
-        if (getLength(firstNode) == 2) {
-            return firstNode.getConnectWhere();
+        if (getLength(firstRuleNode) == 2) {
+            return firstRuleNode.getConnectWhere();
         } else {
-            return merge(firstNode);
+            return merge(firstRuleNode);
         }
     }
 
     //判断当前节点是否需要和前一个节点合并
-    private static boolean isNeedToJoin(Node currentNode) {
-        if (Objects.isNull(currentNode)) {
+    private static boolean isNeedToJoin(RuleNode currentRuleNode) {
+        if (Objects.isNull(currentRuleNode)) {
             return false;
         }
-        String currentValue = currentNode.getRule();
+        String currentValue = currentRuleNode.getRule();
         String lowerCase = currentValue.toLowerCase();
         boolean result = false;
         if (lowerCase.contains("and") || lowerCase.contains("or")) {
@@ -153,35 +153,35 @@ public class RuleUtil {
 
     /**
      * 去点当前节点前面一个节点的一个结尾（  和   后面一个节点的一个开头）
-     * @param currentNode
+     * @param currentRuleNode
      */
-    private static void removeBracket(Node currentNode) {
-        Node preNode = currentNode.getPreNode();
-        Node nextNode = currentNode.getNextNode();
-        preNode.setRule(preNode.getRule().trim().substring(0,preNode.getRule().trim().length()-1));
-        nextNode.setRule(nextNode.getRule().trim().substring(1));
+    private static void removeBracket(RuleNode currentRuleNode) {
+        RuleNode preRuleNode = currentRuleNode.getPreRuleNode();
+        RuleNode nextRuleNode = currentRuleNode.getNextRuleNode();
+        preRuleNode.setRule(preRuleNode.getRule().trim().substring(0, preRuleNode.getRule().trim().length()-1));
+        nextRuleNode.setRule(nextRuleNode.getRule().trim().substring(1));
     }
 
-    private static boolean isClose(Node currentNode) {
-        Node preNode = currentNode.getPreNode();
-        Node nextNode = currentNode.getNextNode();
-        if (preNode.getRule().trim().endsWith("((") && nextNode.getRule().trim().startsWith("))")) {
+    private static boolean isClose(RuleNode currentRuleNode) {
+        RuleNode preRuleNode = currentRuleNode.getPreRuleNode();
+        RuleNode nextRuleNode = currentRuleNode.getNextRuleNode();
+        if (preRuleNode.getRule().trim().endsWith("((") && nextRuleNode.getRule().trim().startsWith("))")) {
             return true;
         }
         return false;
     }
 
-    private static boolean isAnd(Node currentNode) {
-        String currentValue = currentNode.getRule();
+    private static boolean isAnd(RuleNode currentRuleNode) {
+        String currentValue = currentRuleNode.getRule();
         String lowerCase = currentValue.toLowerCase();
         return lowerCase.contains("and");
     }
 
-    private static int getLength(Node firstNode) {
+    private static int getLength(RuleNode firstRuleNode) {
         int length = 0;
-        while (!Objects.isNull(firstNode)) {
+        while (!Objects.isNull(firstRuleNode)) {
             length++;
-            firstNode = firstNode.getNextNode();
+            firstRuleNode = firstRuleNode.getNextRuleNode();
         }
         return length;
     }

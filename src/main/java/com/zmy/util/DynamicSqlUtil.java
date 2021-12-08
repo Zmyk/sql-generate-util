@@ -184,7 +184,7 @@ public class DynamicSqlUtil {
                         }
                     }
                 }
-                on = on.getOn();
+                on = on.getNext();
             }
             from = from.getFrom();
         }
@@ -198,7 +198,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerWhere(Where<Object> where) {
+    private static String handlerWhere(Where<?> where) {
         StringBuilder result = new StringBuilder("");
         while (where != null) {
             List<Bracket> brackets = where.getBrackets();
@@ -220,7 +220,7 @@ public class DynamicSqlUtil {
 //            if (value == null) {
 //                throw new IllegalArgumentException("where条件value不能为null！");
 //            }
-            if (andOr != null) {
+            if (!Objects.isNull(andOr)) {
                 result.append(andOr.getSign()).append(" ");
             }
             if (!CollectionUtil.isEmpty(brackets)) {
@@ -245,7 +245,7 @@ public class DynamicSqlUtil {
                     }
                 }
             }
-            where = where.getWhere();
+            where = where.getNext();
         }
         return new String(result);
     }
@@ -380,7 +380,7 @@ public class DynamicSqlUtil {
                     }
                 }
             }
-            having = having.getHaving();
+            having = having.getNext();
         }
         return new String(result);
     }

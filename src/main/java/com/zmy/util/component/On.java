@@ -17,7 +17,7 @@ import java.util.Objects;
  * @create: 2021-12-04 23:14
  */
 @Data
-public class On {
+public class On implements IComponentNode<On> {
 
     private List<Bracket> brackets;
     private String table1;
@@ -26,7 +26,7 @@ public class On {
     private String table2;
     private String column2;
     private AndOr andOr;
-    private On on;
+    private On next;
 
     private On last;
 
@@ -50,7 +50,7 @@ public class On {
                 ", table2='" + table2 + '\'' +
                 ", column2='" + column2 + '\'' +
                 ", andOr=" + andOr +
-                ", on=" + on +
+                ", on=" + next +
                 '}';
     }
 
@@ -110,16 +110,16 @@ public class On {
         return this;
     }
 
-    private On getLast(On on) {
-        while (!Objects.isNull(on)) {
-            if (!Objects.isNull(on.getOn())) {
-                on = on.getOn();
-            } else {
-                break;
-            }
-        }
-        return on;
-    }
+//    private On getTheLastNode(On on) {
+//        while (!Objects.isNull(on)) {
+//            if (!Objects.isNull(on.getNext())) {
+//                on = on.getNext();
+//            } else {
+//                break;
+//            }
+//        }
+//        return on;
+//    }
 
     private On partConnect(On on,AndOr andOr) {
         if (!Objects.isNull(on)) {
@@ -149,20 +149,20 @@ public class On {
     private On connect(On on, AndOr andOr) {
         if (!Objects.isNull(on)) {
             on.setAndOr(andOr);
-            this.last.setOn(on);
-            this.last = this.getLast(on);
+            this.last.setNext(on);
+            this.last = this.getTheLastNode(on);
         }
         return this;
     }
 
     private void addPreBracket() {
         this.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(this).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(this).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
     private void addNextBracket(On on) {
         on.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(on).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(on).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
 }

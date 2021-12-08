@@ -9,28 +9,28 @@ import com.zmy.util.component.Where;
  * @Date: 2021-12-07 11:38
  * @Version: 1.0
  */
-public class Node {
+public class RuleNode {
 
     private String rule;
     private Where<Object> connectWhere;
     private Boolean isClose;
-    private Node preNode;
-    private Node nextNode;
+    private RuleNode preRuleNode;
+    private RuleNode nextRuleNode;
 
-    public Node() {
+    public RuleNode() {
     }
 
-    public Node(String rule) {
+    public RuleNode(String rule) {
         this.rule = rule;
         this.isClose = false;
     }
 
-    public Node(String rule, Where<Object> connectWhere, Boolean isClose, Node preNode, Node nextNode) {
+    public RuleNode(String rule, Where<Object> connectWhere, Boolean isClose, RuleNode preRuleNode, RuleNode nextRuleNode) {
         this.rule = rule;
         this.connectWhere = connectWhere;
         this.isClose = isClose;
-        this.preNode = preNode;
-        this.nextNode = nextNode;
+        this.preRuleNode = preRuleNode;
+        this.nextRuleNode = nextRuleNode;
     }
 
     public String getRule() {
@@ -57,20 +57,20 @@ public class Node {
         this.isClose = isClose;
     }
 
-    public Node getPreNode() {
-        return preNode;
+    public RuleNode getPreRuleNode() {
+        return preRuleNode;
     }
 
-    public void setPreNode(Node preNode) {
-        this.preNode = preNode;
+    public void setPreRuleNode(RuleNode preRuleNode) {
+        this.preRuleNode = preRuleNode;
     }
 
-    public Node getNextNode() {
-        return nextNode;
+    public RuleNode getNextRuleNode() {
+        return nextRuleNode;
     }
 
-    public void setNextNode(Node nextNode) {
-        this.nextNode = nextNode;
+    public void setNextRuleNode(RuleNode nextRuleNode) {
+        this.nextRuleNode = nextRuleNode;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Node {
                 "value='" + rule + '\'' +
                 ", connectWhere=" + connectWhere +
                 ", isClose=" + isClose +
-                ", nextNode=" + nextNode +
+                ", nextNode=" + nextRuleNode +
                 '}';
     }
 }

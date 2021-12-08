@@ -18,7 +18,7 @@ import java.util.Objects;
  * @create: 2021-12-04 23:15
  */
 @Data
-public class Having<T> {
+public class Having<T> implements IComponentNode<Having<?>> {
 
     private List<Bracket> brackets;
     private String table;
@@ -27,9 +27,9 @@ public class Having<T> {
     private CondOper condOper;
     private T value;
     private AndOr andOr;
-    private Having<T> having;
+    private Having<?> next;
 
-    private Having<T> last;
+    private Having<?> last;
 
 
     public Having(String table, String column, ColumnOper columnOper, CondOper condOper, T value) {
@@ -52,78 +52,78 @@ public class Having<T> {
                 ", condOper=" + condOper +
                 ", value=" + value +
                 ", andOr=" + andOr +
-                ", having=" + having +
+                ", having=" + next +
                 '}';
     }
 
-    public Having<T> and(Having<T> having){
+    public Having<T> and(Having<?> having){
         if (!Objects.isNull(having)) {
             this.connect(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having<T> andPart(Having<T> having) {
+    public Having<T> andPart(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.connectPart(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having<T> partAnd(Having<T> having) {
+    public Having<T> partAnd(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.partConnect(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having<T> partAndPart(Having<T> having) {
+    public Having<T> partAndPart(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.partConnectPart(having,AndOr.AND);
         }
         return this;
     }
 
-    public Having<T> or(Having<T> having){
+    public Having<T> or(Having<?> having){
         if (!Objects.isNull(having)) {
             this.connect(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having<T> orPart(Having<T> having) {
+    public Having<T> orPart(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.connectPart(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having<T> partOr(Having<T> having) {
+    public Having<T> partOr(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.partConnect(having,AndOr.OR);
         }
         return this;
     }
 
-    public Having<T> partOrPart(Having<T> having) {
+    public Having<T> partOrPart(Having<?> having) {
         if (!Objects.isNull(having)) {
             this.partConnectPart(having,AndOr.OR);
         }
         return this;
     }
 
-    private Having<T> getLast(Having<T> having) {
-        while (!Objects.isNull(having)) {
-            if (!Objects.isNull(having.getHaving())) {
-                having = having.getHaving();
-            } else {
-                break;
-            }
-        }
-        return having;
-    }
+//    private Having<?> getTheLastNode(Having<?> having) {
+//        while (!Objects.isNull(having)) {
+//            if (!Objects.isNull(having.getNext())) {
+//                having = having.getNext();
+//            } else {
+//                break;
+//            }
+//        }
+//        return having;
+//    }
 
-    private Having<T> partConnect(Having<T> having,AndOr andOr) {
+    private Having<T> partConnect(Having<?> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addPreBracket();
             this.connect(having,andOr);
@@ -131,7 +131,7 @@ public class Having<T> {
         return this;
     }
 
-    private Having<T> connectPart(Having<T> having,AndOr andOr) {
+    private Having<T> connectPart(Having<?> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addNextBracket(having);
             this.connect(having,andOr);
@@ -139,7 +139,7 @@ public class Having<T> {
         return this;
     }
 
-    private Having<T> partConnectPart(Having<T> having,AndOr andOr) {
+    private Having<T> partConnectPart(Having<?> having,AndOr andOr) {
         if (!Objects.isNull(having)) {
             this.addPreBracket();
             this.addNextBracket(having);
@@ -148,23 +148,23 @@ public class Having<T> {
         return this;
     }
 
-    private Having<T> connect(Having<T> having, AndOr andOr) {
+    private Having<T> connect(Having<?> having, AndOr andOr) {
         if (!Objects.isNull(having)) {
             having.setAndOr(andOr);
-            this.last.setHaving(having);
-            this.last = this.getLast(having);
+            this.last.setNext(having);
+            this.last = this.getTheLastNode(having);
         }
         return this;
     }
 
     private void addPreBracket() {
         this.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(this).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(this).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
-    private void addNextBracket(Having<T> having) {
+    private void addNextBracket(Having<?> having) {
         having.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(having).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(having).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
 }

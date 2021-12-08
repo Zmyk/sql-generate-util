@@ -18,7 +18,7 @@ import java.util.Objects;
  * @create: 2021-12-04 23:15
  */
 @Data
-public class Where<T> {
+public class Where<T> implements IComponentNode<Where<?>> {
 
     private List<Bracket> brackets;
     private String table;
@@ -27,9 +27,9 @@ public class Where<T> {
     private CondOper condOper;
     private T value;
     private AndOr andOr;
-    private Where<T> where;
+    private Where<?> next;
 
-    private Where<T> last;
+    private Where<?> last;
 
     public Where(String table, String column, CondOper condOper,ColumnOper columnOper, T value) {
         this.table = table;
@@ -69,7 +69,7 @@ public class Where<T> {
                 ", condOper=" + condOper +
                 ", value=" + value +
                 ", andOr=" + andOr +
-                ", where=" + where +
+                ", where=" + next +
                 '}';
     }
 
@@ -78,7 +78,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> and(Where<T> where){
+    public Where<T> and(Where<?> where){
         if (!Objects.isNull(where)) {
             this.connect(where,AndOr.AND);
         }
@@ -90,7 +90,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> andPart(Where<T> where){
+    public Where<T> andPart(Where<?> where){
         if (!Objects.isNull(where)) {
             this.connectPart(where,AndOr.AND);
         }
@@ -102,7 +102,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partAnd(Where<T> where){
+    public Where<T> partAnd(Where<?> where){
         if (!Objects.isNull(where)) {
             this.partConnect(where,AndOr.AND);
         }
@@ -114,7 +114,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partAndPart(Where<T> where){
+    public Where<T> partAndPart(Where<?> where){
         if (!Objects.isNull(where)) {
             this.partConnectPart(where,AndOr.AND);
         }
@@ -126,7 +126,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> or(Where<T> where){
+    public Where<T> or(Where<?> where){
         if (!Objects.isNull(where)) {
             this.connect(where,AndOr.OR);
         }
@@ -138,7 +138,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> orPart(Where<T> where){
+    public Where<T> orPart(Where<?> where){
         if (!Objects.isNull(where)) {
             this.connectPart(where,AndOr.OR);
         }
@@ -150,7 +150,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partOr(Where<T> where){
+    public Where<T> partOr(Where<?> where){
         if (!Objects.isNull(where)) {
             this.partConnect(where,AndOr.OR);
         }
@@ -162,30 +162,30 @@ public class Where<T> {
      * @param where
      * @return
      */
-    public Where<T> partOrPart(Where<T> where){
+    public Where<T> partOrPart(Where<?> where){
         if (!Objects.isNull(where)) {
             this.partConnectPart(where,AndOr.OR);
         }
         return this;
     }
 
-    private Where<T> getLast(Where<T> where) {
-        while (!Objects.isNull(where)) {
-            if (!Objects.isNull(where.getWhere())) {
-                where = where.getWhere();
-            } else {
-                break;
-            }
-        }
-        return where;
-    }
+//    private Where<?> getTheLastNode(Where<?> where) {
+//        while (!Objects.isNull(where)) {
+//            if (!Objects.isNull(where.getNext())) {
+//                where = where.getNext();
+//            } else {
+//                break;
+//            }
+//        }
+//        return where;
+//    }
 
     /**
      * 调用方作为一个整体做连接，1、节点连接  2、调用方加括号
      * @param where
      * @return
      */
-    private Where<T> partConnect(Where<T> where,AndOr andOr) {
+    private Where<T> partConnect(Where<?> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addPreBracket();
             this.connect(where, andOr);
@@ -198,7 +198,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where<T> connectPart(Where<T> where,AndOr andOr) {
+    private Where<T> connectPart(Where<?> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addNextBracket(where);
             this.connect(where, andOr);
@@ -211,7 +211,7 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where<T> partConnectPart(Where<T> where,AndOr andOr) {
+    private Where<T> partConnectPart(Where<?> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             this.addPreBracket();
             this.addNextBracket(where);
@@ -225,11 +225,11 @@ public class Where<T> {
      * @param where
      * @return
      */
-    private Where<T> connect(Where<T> where,AndOr andOr) {
+    private Where<T> connect(Where<?> where,AndOr andOr) {
         if (!Objects.isNull(where)) {
             where.setAndOr(andOr);
-            this.last.setWhere(where);
-            this.last = this.getLast(where);
+            this.last.setNext(where);
+            this.last = this.getTheLastNode(where);
         }
         return this;
     }
@@ -241,16 +241,16 @@ public class Where<T> {
      */
     private void addPreBracket() {
         this.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(this).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(this).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
     /**
      * 参数方加整体括号
      * @param where
      */
-    private void addNextBracket(Where<T> where) {
+    private void addNextBracket(Where<?> where) {
         where.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getLast(where).getBrackets().add(Bracket.RIGHTBRACKET);
+        this.getTheLastNode(where).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
 }
