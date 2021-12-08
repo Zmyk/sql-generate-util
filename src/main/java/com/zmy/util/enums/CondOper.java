@@ -2,7 +2,7 @@ package com.zmy.util.enums;
 
 /**
  * @program: business-receipt-build-tool-parent
- * @description:
+ * @description: 条件操作
  * @author: zhangmy
  * @create: 2021-12-04 23:18
  */
@@ -15,7 +15,8 @@ public enum CondOper {
     EQUAL(4,"=","等于"),
     UNEQUAL(5,"!=","不等于"),
     LIKE(6,"like","类似于"),
-    ISNULL(7,"is null","为空")
+    NOTLIKE(7,"not like","不包含"),
+    ISNULL(8,"is null","为空")
     ;
 
     private int code;
