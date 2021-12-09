@@ -1,8 +1,8 @@
 package com.zmy.util.component;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: GroupBy组件
  * @author: zhangmy
  * @create: 2021-12-04 23:15
  */

@@ -5,8 +5,10 @@ import com.zmy.util.component.*;
 import java.util.List;
 
 /**
- * @program: business-receipt-build-tool-parent
+ * @program: sql-generate-util
  * @description:
+ *      该类是最终的SQL对象
+ *      在设置好组件内容后，通过DynamicSqlUtil类的parseDynamicSqlParam方法生成目标Sql字串
  * @author: zhangmy
  * @create: 2021-12-04 23:12
  */
@@ -16,11 +18,11 @@ public class DynamicSqlParam {
 
     private From from;
 
-    private Where<Object> where;
+    private Where<?> where;
 
     private List<GroupBy> groupBys;
 
-    private Having<Object> having;
+    private Having<?> having;
 
     private List<OrderBy> orderBys;
 
@@ -40,11 +42,11 @@ public class DynamicSqlParam {
         this.from = from;
     }
 
-    public Where<Object> getWhere() {
+    public Where<?> getWhere() {
         return where;
     }
 
-    public void setWhere(Where<Object> where) {
+    public void setWhere(Where<?> where) {
         this.where = where;
     }
 

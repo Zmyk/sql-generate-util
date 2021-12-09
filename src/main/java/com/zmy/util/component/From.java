@@ -4,8 +4,8 @@ import com.zmy.util.enums.Join;
 import lombok.Data;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: From组件
  * @author: zhangmy
  * @create: 2021-12-04 23:13
  */

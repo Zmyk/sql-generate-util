@@ -4,8 +4,8 @@ import com.zmy.util.enums.Order;
 import lombok.Data;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: OrderBy组件
  * @author: zhangmy
  * @create: 2021-12-04 23:16
  */

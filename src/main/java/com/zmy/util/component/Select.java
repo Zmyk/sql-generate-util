@@ -3,8 +3,8 @@ package com.zmy.util.component;
 import com.zmy.util.enums.ColumnOper;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: Select组件
  * @author: zhangmy
  * @create: 2021-12-04 23:13
  */

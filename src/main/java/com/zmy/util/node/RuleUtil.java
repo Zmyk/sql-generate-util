@@ -17,7 +17,7 @@ import java.util.Objects;
 public class RuleUtil {
 
 
-    public static Where<Object> handler(RuleNode firstRuleNode, Map<String,Where<Object>> keyWhere) {
+    public static Where<Object> handler(RuleNode firstRuleNode, Map<String,Where<Object>> keyWhere) throws Exception {
         for (String s : keyWhere.keySet()) {
             firstRuleNode = split(firstRuleNode, s, keyWhere.get(s));
         }
@@ -78,7 +78,7 @@ public class RuleUtil {
      * @Author: zhangmy
      * @Date: 2021/2/22 15:12//当前节点的where已经合并到前一个节点，删除当前节点，删除前节点的一个左括号，删除后节点的一个右括号
      */
-    private static Where<Object> merge(RuleNode firstRuleNode) {
+    private static Where<Object> merge(RuleNode firstRuleNode) throws Exception {
         RuleNode currentRuleNode = firstRuleNode;
         while (!Objects.isNull(currentRuleNode)) {
             if (isNeedToJoin(currentRuleNode)) {//需要和前一个节点合并

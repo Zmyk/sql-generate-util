@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: 该类是解析DynamicSqlParam的工具类
  * @author: zhangmy
  * @create: 2021-12-04 23:11
  */
@@ -36,7 +36,7 @@ public class DynamicSqlUtil {
         From from = param.getFrom();
         result.append(handlerFrom(from));
         //where
-        Where<Object> where = param.getWhere();
+        Where<?> where = param.getWhere();
         if (where != null) {
             result.append("where ")
                     .append(handlerWhere(where));
@@ -132,7 +132,7 @@ public class DynamicSqlUtil {
                 result.append(" as ").append(from.getTableAlias());
             }
             if (on != null) {
-                result.append("on ");
+                result.append(" on ");
             }
             while (on != null) {
                 List<Bracket> brackets = on.getBrackets();
@@ -279,7 +279,7 @@ public class DynamicSqlUtil {
             return "%" + value + "%";
         }
         if (CondOper.ISNULL.equals(condOper)) {
-            return "";
+            return null;
         }
         return value;
     }
@@ -316,7 +316,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerHaving(Having having) {
+    private static String handlerHaving(Having<?> having) {
 
         StringBuilder result = new StringBuilder("");
 
@@ -451,6 +451,9 @@ public class DynamicSqlUtil {
      * @Date: 2020/12/30
      */
     private static <T> String handlerValueType(T value) {
+        if (Objects.isNull(value)) {
+            return "";
+        }
         if (value instanceof String) {
             return addSingleQuotes((String) value);
         }
@@ -458,7 +461,7 @@ public class DynamicSqlUtil {
             return value.toString();
         }
         if (value instanceof Date) {
-            return addSingleQuotes(((Date) value).toString());
+            return addSingleQuotes(value.toString());
         }
         return value.toString();
     }

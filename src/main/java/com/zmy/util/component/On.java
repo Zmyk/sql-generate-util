@@ -11,24 +11,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description: On结构类似于where结构，可参考where相关注释及思路
+ * @program: sql-generate-util
+ * @description: On组件
  * @author: zhangmy
  * @create: 2021-12-04 23:14
  */
 @Data
-public class On implements IComponentNode<On> {
+public class On extends NodeComponent<On> implements INodeComponent<On> {
 
-    private List<Bracket> brackets;
     private String table1;
     private String column1;
     private CondOper condOper;
     private String table2;
     private String column2;
-    private AndOr andOr;
-    private On next;
-
-    private On last;
 
     public On(String table1, String column1, CondOper condOper, String table2, String column2) {
         this.table1 = table1;
@@ -52,117 +47,6 @@ public class On implements IComponentNode<On> {
                 ", andOr=" + andOr +
                 ", on=" + next +
                 '}';
-    }
-
-    public On and(On on) {
-        if (!Objects.isNull(on)) {
-            this.connect(on,AndOr.AND);
-        }
-        return this;
-    }
-
-    public On andPart(On on) {
-        if (!Objects.isNull(on)) {
-            this.connectPart(on,AndOr.AND);
-        }
-        return this;
-    }
-
-    public On partAnd(On on) {
-        if (!Objects.isNull(on)) {
-            this.partConnect(on,AndOr.AND);
-        }
-        return this;
-    }
-
-    public On partAndPart(On on) {
-        if (!Objects.isNull(on)) {
-            this.partConnectPart(on,AndOr.AND);
-        }
-        return this;
-    }
-
-    public On or(On on) {
-        if (!Objects.isNull(on)) {
-            this.connect(on,AndOr.OR);
-        }
-        return this;
-    }
-
-    public On orPart(On on) {
-        if (!Objects.isNull(on)) {
-            this.connectPart(on,AndOr.OR);
-        }
-        return this;
-    }
-
-    public On partOr(On on) {
-        if (!Objects.isNull(on)) {
-            this.partConnect(on,AndOr.OR);
-        }
-        return this;
-    }
-
-    public On partOrPart(On on) {
-        if (!Objects.isNull(on)) {
-            this.partConnectPart(on,AndOr.OR);
-        }
-        return this;
-    }
-
-//    private On getTheLastNode(On on) {
-//        while (!Objects.isNull(on)) {
-//            if (!Objects.isNull(on.getNext())) {
-//                on = on.getNext();
-//            } else {
-//                break;
-//            }
-//        }
-//        return on;
-//    }
-
-    private On partConnect(On on,AndOr andOr) {
-        if (!Objects.isNull(on)) {
-            this.addPreBracket();
-            this.connect(on,andOr);
-        }
-        return this;
-    }
-
-    private On connectPart(On on,AndOr andOr) {
-        if (!Objects.isNull(on)) {
-            this.addNextBracket(on);
-            this.connect(on,andOr);
-        }
-        return this;
-    }
-
-    private On partConnectPart(On on,AndOr andOr) {
-        if (!Objects.isNull(on)) {
-            this.addPreBracket();
-            this.addNextBracket(on);
-            this.connect(on,andOr);
-        }
-        return this;
-    }
-
-    private On connect(On on, AndOr andOr) {
-        if (!Objects.isNull(on)) {
-            on.setAndOr(andOr);
-            this.last.setNext(on);
-            this.last = this.getTheLastNode(on);
-        }
-        return this;
-    }
-
-    private void addPreBracket() {
-        this.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getTheLastNode(this).getBrackets().add(Bracket.RIGHTBRACKET);
-    }
-
-    private void addNextBracket(On on) {
-        on.getBrackets().add(Bracket.LEFTBRACKET);
-        this.getTheLastNode(on).getBrackets().add(Bracket.RIGHTBRACKET);
     }
 
 }

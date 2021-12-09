@@ -1,8 +1,8 @@
 package com.zmy.util.enums;
 
 /**
- * @program: business-receipt-build-tool-parent
- * @description:
+ * @program: sql-generate-util
+ * @description: 字段操作
  * @author: zhangmy
  * @create: 2021-12-04 23:17
  */
