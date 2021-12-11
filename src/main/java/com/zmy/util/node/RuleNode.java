@@ -12,7 +12,7 @@ import com.zmy.util.component.Where;
 public class RuleNode {
 
     private String rule;
-    private Where<Object> connectWhere;
+    private Where connectWhere;
     private Boolean isClose;
     private RuleNode preRuleNode;
     private RuleNode nextRuleNode;
@@ -25,7 +25,7 @@ public class RuleNode {
         this.isClose = false;
     }
 
-    public RuleNode(String rule, Where<Object> connectWhere, Boolean isClose, RuleNode preRuleNode, RuleNode nextRuleNode) {
+    public RuleNode(String rule, Where connectWhere, Boolean isClose, RuleNode preRuleNode, RuleNode nextRuleNode) {
         this.rule = rule;
         this.connectWhere = connectWhere;
         this.isClose = isClose;
@@ -41,11 +41,11 @@ public class RuleNode {
         this.rule = rule;
     }
 
-    public Where<Object> getConnectWhere() {
+    public Where getConnectWhere() {
         return connectWhere;
     }
 
-    public void setConnectWhere(Where<Object> connectWhere) {
+    public void setConnectWhere(Where connectWhere) {
         this.connectWhere = connectWhere;
     }
 

@@ -1,14 +1,9 @@
 package com.zmy.util.component;
 
 
-import com.zmy.util.enums.AndOr;
-import com.zmy.util.enums.Bracket;
 import com.zmy.util.enums.CondOper;
-import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @program: sql-generate-util
@@ -16,8 +11,7 @@ import java.util.Objects;
  * @author: zhangmy
  * @create: 2021-12-04 23:14
  */
-@Data
-public class On extends NodeComponent<On> implements INodeComponent<On> {
+public class On extends NodeComponent<On> {
 
     private String table1;
     private String column1;
@@ -25,7 +19,27 @@ public class On extends NodeComponent<On> implements INodeComponent<On> {
     private String table2;
     private String column2;
 
-    public On(String table1, String column1, CondOper condOper, String table2, String column2) {
+    public String getTable1() {
+        return table1;
+    }
+
+    public String getColumn1() {
+        return column1;
+    }
+
+    public CondOper getCondOper() {
+        return condOper;
+    }
+
+    public String getTable2() {
+        return table2;
+    }
+
+    public String getColumn2() {
+        return column2;
+    }
+
+    private On(String table1, String column1, CondOper condOper, String table2, String column2) {
         this.table1 = table1;
         this.column1 = column1;
         this.condOper = condOper;
@@ -48,5 +62,50 @@ public class On extends NodeComponent<On> implements INodeComponent<On> {
                 ", on=" + next +
                 '}';
     }
+
+    public static class OnBuilder extends MemberCheck<On,OnBuilder> {
+
+        private String table1;
+        private String column1;
+        private CondOper condOper;
+        private String table2;
+        private String column2;
+
+        public OnBuilder table1(String table1) {
+            this.table1 = table1;
+            return this;
+        }
+
+        public OnBuilder column1(String column1) {
+            this.column1 = column1;
+            return this;
+        }
+
+        public OnBuilder condOper(CondOper condOper) {
+            this.condOper = condOper;
+            return this;
+        }
+
+        public OnBuilder table2(String table2) {
+            this.table2 = table2;
+            return this;
+        }
+
+        public OnBuilder column2(String column2) {
+            this.column2 = column2;
+            return this;
+        }
+
+        public static OnBuilder builder() {
+            return new OnBuilder();
+        }
+
+        @Override
+        protected On buildInstance() {
+            return new On(table1,column1,condOper,table2,column2);
+        }
+
+    }
+
 
 }

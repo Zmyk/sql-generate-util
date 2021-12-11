@@ -12,19 +12,24 @@ import java.util.List;
  * @author: zhangmy
  * @create: 2021-12-04 23:12
  */
-public class DynamicSqlParam {
+public class QuerySql implements Sql{
 
     private List<Select> selects;
 
     private From from;
 
-    private Where<?> where;
+    private Where where;
 
     private List<GroupBy> groupBys;
 
-    private Having<?> having;
+    private Having having;
 
     private List<OrderBy> orderBys;
+
+//    public QuerySql select(List<Select> selects) {
+//        this.selects = selects;
+//
+//    }
 
     public List<Select> getSelects() {
         return selects;
@@ -42,11 +47,11 @@ public class DynamicSqlParam {
         this.from = from;
     }
 
-    public Where<?> getWhere() {
+    public Where getWhere() {
         return where;
     }
 
-    public void setWhere(Where<?> where) {
+    public void setWhere(Where where) {
         this.where = where;
     }
 

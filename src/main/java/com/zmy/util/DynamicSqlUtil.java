@@ -26,7 +26,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    public static String parseDynamicSqlParam(DynamicSqlParam param) {
+    public static String parseDynamicSqlParam(QuerySql param) {
         //select
         StringBuilder result = new StringBuilder("select ");
         List<Select> selects = param.getSelects();
@@ -36,7 +36,7 @@ public class DynamicSqlUtil {
         From from = param.getFrom();
         result.append(handlerFrom(from));
         //where
-        Where<?> where = param.getWhere();
+        Where where = param.getWhere();
         if (where != null) {
             result.append("where ")
                     .append(handlerWhere(where));
@@ -186,7 +186,7 @@ public class DynamicSqlUtil {
                 }
                 on = on.getNext();
             }
-            from = from.getFrom();
+            from = from.getNext();
         }
         return new String(result);
     }
@@ -198,7 +198,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerWhere(Where<?> where) {
+    private static String handlerWhere(Where where) {
         StringBuilder result = new StringBuilder("");
         while (where != null) {
             List<Bracket> brackets = where.getBrackets();
@@ -316,7 +316,7 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerHaving(Having<?> having) {
+    private static String handlerHaving(Having having) {
 
         StringBuilder result = new StringBuilder("");
 

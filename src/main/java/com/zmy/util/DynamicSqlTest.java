@@ -10,6 +10,7 @@ import com.zmy.util.node.RuleUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -22,95 +23,99 @@ public class DynamicSqlTest {
 
     @Test
     public void test01() throws Exception {
-        DynamicSqlParam param = new DynamicSqlParam();
-        //构造select
-        param.setSelects(
-                Arrays.asList(new Select("user","name","用户名", ColumnOper.NONE),
-                        new Select("user","salary","薪资", ColumnOper.SUM),
-                        new Select("department","name","部门", ColumnOper.NONE),
-                        new Select("role","name","角色", ColumnOper.NONE)));
-        //构造from
-        param.setFrom(
-                new From("user").as("u").leftJoin("department").as("d1").on(
-                                                                new On("u","id", CondOper.EQUAL,"d1","user_id").or(new On("u","name",CondOper.EQUAL,"d1","user_name"))
-                                                                .andPart(new On("u","col1",CondOper.EQUAL,"d1","col2")))
-                        .leftJoin("role").as("r1").on(new On("u","id", CondOper.EQUAL,"r1","user_id"))
-        );
-
-        //构造where
-        param.setWhere(
-                new Where<Object>("user","id",CondOper.EQUAL,123456798)
-                        .or(new Where("department","id",CondOper.EQUAL,"de456852")).partAnd(new Where("user","create_time",CondOper.GREATERTHANOREQUAL,new DateTime()))
-        );
-        //构造group by
-        param.setGroupBys(
+        QuerySql querySql = new QuerySql();
+        querySql.setSelects(
                 Arrays.asList(
-                        new GroupBy("user","id"),
-                        new GroupBy("role","id")
+                        Select.SelectBuilder.builder().table("user").column("name").alias("用户名").build(),
+                        Select.SelectBuilder.builder().table("user").column("salary").alias("薪资").columnOper(ColumnOper.SUM).build(),
+                        Select.SelectBuilder.builder().table("department").column("name").alias("部门").build(),
+                        Select.SelectBuilder.builder().table("role").column("name").alias("角色").build()
+                )
+        );
+        //构造from
+        querySql.setFrom(
+                From.FromBuilder.builder().table("user").tableAlias("u").build().leftJoin(
+                        From.FromBuilder.builder().table("department").tableAlias("d1").build().on(
+                                On.OnBuilder.builder().table1("u").column1("id").condOper(CondOper.EQUAL).table2("d1").column2("user_id").build()
+                                        .or(On.OnBuilder.builder().table1("u").column1("name").condOper(CondOper.EQUAL).table2("d1").column2("user_name").build())
+                                        .andPart(On.OnBuilder.builder().table1("u").column1("col1").condOper(CondOper.EQUAL).table2("d1").column2("col2").build())
+                        )
+                ).leftJoin(From.FromBuilder.builder().table("role").tableAlias("r1").build().on(On.OnBuilder.builder().table1("u").column1("id").condOper(CondOper.EQUAL).table2("r1").column2("user_id").build()))
+        );
+        //构造where
+        querySql.setWhere(
+                Where.WhereBuilder.builder().table("user").column("id").condOper(CondOper.EQUAL).value(123456789).build()
+                .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
+                .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").condOper(CondOper.GREATERTHANOREQUAL).value(new Date()).build())
+       );
+        //构造group by
+        querySql.setGroupBys(
+                Arrays.asList(
+                        GroupBy.GroupByBuilder.builder().table("user").column("id").build(),
+                        GroupBy.GroupByBuilder.builder().table("role").column("id").build()
                 )
         );
         //构造having
-        param.setHaving(
-                new Having<Object>("user","age", ColumnOper.NONE, CondOper.GREATERTHAN,20)
-                        .and(new Having("user","gender",ColumnOper.NONE,CondOper.EQUAL,"女"))
+        querySql.setHaving(
+                Having.HavingBuilder.builder().table("user").column("age").condOper(CondOper.GREATERTHAN).value(20).build()
+                .and(Having.HavingBuilder.builder().table("user").column("gender").condOper(CondOper.EQUAL).value("女").build())
+
         );
         //构造order by
-        param.setOrderBys(
+        querySql.setOrderBys(
                 Arrays.asList(
-                        new OrderBy("user","id", Order.ASC),
-                        new OrderBy("department","name",Order.ASC),
-                        new OrderBy("role","id",Order.DESC)
+                        OrderBy.OrderByBuilder.builder().table("user").column("id").order(Order.ASC).build(),
+                        OrderBy.OrderByBuilder.builder().table("department").column("name").order(Order.ASC).build(),
+                        OrderBy.OrderByBuilder.builder().table("role").column("id").order(Order.DESC).build()
                 )
         );
-//        System.out.println(JSON.toJSONString(param));
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(param));
+        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
     }
 
     @org.junit.Test
     public void test02() throws Exception {
-//        List<Object> list = new ArrayList<Integer>();
         RuleNode ruleNode = new RuleNode("((0) or (1)) and ((2) or (3) or (4))");
-        HashMap<String,Where<Object>> map = new HashMap<>();
-        map.put("0", new Where<Object>("0", "0", CondOper.EQUAL, 0));
-        map.put("1", new Where<Object>("1", "1", CondOper.EQUAL, 1));
-        map.put("2", new Where<Object>("2", "2", CondOper.EQUAL, 2));
-        map.put("3", new Where<Object>("3", "3", CondOper.EQUAL, 3));
-        map.put("4", new Where<Object>("4", "4", CondOper.EQUAL, 4));
-        Where<Object> where = RuleUtil.handler(ruleNode, map);
-        DynamicSqlParam dynamicSqlParam = new DynamicSqlParam();
-        dynamicSqlParam.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(dynamicSqlParam));
+        HashMap<String,Where> map = new HashMap<>();
+        map.put("0", Where.WhereBuilder.builder().table("0").column("0").condOper(CondOper.EQUAL).value("0").build());
+        map.put("1", Where.WhereBuilder.builder().table("1").column("1").condOper(CondOper.EQUAL).value("1").build());
+        map.put("2", Where.WhereBuilder.builder().table("2").column("2").condOper(CondOper.EQUAL).value("2").build());
+        map.put("3", Where.WhereBuilder.builder().table("3").column("3").condOper(CondOper.EQUAL).value("3").build());
+        map.put("4", Where.WhereBuilder.builder().table("4").column("4").condOper(CondOper.EQUAL).value("4").build());
+        Where where = RuleUtil.handler(ruleNode, map);
+        QuerySql querySql = new QuerySql();
+        querySql.setWhere(where);
+        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
 
     }
 
     @org.junit.Test
     public void test03() throws Exception {
-        Where<?> where = new Where<Object>("user", "id", CondOper.EQUAL, 123456798)
-                .or(new Where<Object>("department", "id", CondOper.EQUAL, "de456852"))
-                .partAnd(new Where<Object>("user", "create_time",ColumnOper.DATE_FORMAT, CondOper.GREATERTHANOREQUAL ,new DateTime()));
-        DynamicSqlParam dynamicSqlParam = new DynamicSqlParam();
-        dynamicSqlParam.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(dynamicSqlParam));
+        Where where = Where.WhereBuilder.builder().table("user").column("id").condOper(CondOper.EQUAL).value(123456789).build()
+                .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
+                .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").columnOper(ColumnOper.DATE_FORMAT).condOper(CondOper.GREATERTHANOREQUAL).value(new DateTime()).build());
+        QuerySql querySql = new QuerySql();
+        querySql.setWhere(where);
+        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
     }
 
     @org.junit.Test
     public void test04() throws Exception {
-        Where<?> where = new Where<Object>("user", "id", CondOper.EQUAL, 123456798)
-                .or(new Where<Object>("department", "id", CondOper.EQUAL, "de456852"))
-                .partAnd(new Where<Object>("user", "create_time", CondOper.GREATERTHANOREQUAL, new DateTime()));
-        DynamicSqlParam dynamicSqlParam = new DynamicSqlParam();
-        dynamicSqlParam.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(dynamicSqlParam));
+        Where where = Where.WhereBuilder.builder().table("user").column("id").condOper(CondOper.EQUAL).value(123456789).build()
+                .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
+                .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").condOper(CondOper.GREATERTHANOREQUAL).value(new DateTime()).build());
+        QuerySql querySql = new QuerySql();
+        querySql.setWhere(where);
+        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
     }
 
     @org.junit.Test
     public void test05() throws Exception {
-        Where<?> where = new Where<Object>("user", "id", CondOper.EQUAL, 123456798)
-                .or(new Where<Object>("department", "id", CondOper.EQUAL, "de456852"))
-                .partAnd(new Where<Object>("user", "create_time",CondOper.ISNULL));
-        DynamicSqlParam dynamicSqlParam = new DynamicSqlParam();
-        dynamicSqlParam.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(dynamicSqlParam));
+        Where where = Where.WhereBuilder.builder().table("user").column("id").condOper(CondOper.EQUAL).value(123456789).build()
+                .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
+                .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").condOper(CondOper.ISNULL).build());
+        QuerySql querySql = new QuerySql();
+        querySql.setWhere(where);
+        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
     }
 
 }

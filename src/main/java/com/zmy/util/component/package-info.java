@@ -20,7 +20,7 @@
  * *
  * *        //构造where
  * *        param.setWhere(
- * *                new Where<Object>("user","id",CondOper.EQUAL,123456798)
+ * *                new Where("user","id",CondOper.EQUAL,123456798)
  * *                        .or(new Where("department","id",CondOper.EQUAL,"de456852")).partAnd(new Where("user","create_time",CondOper.GREATERTHANOREQUAL,new DateTime()))
  * *        );
  * *        //构造group by

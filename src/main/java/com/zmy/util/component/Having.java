@@ -1,15 +1,10 @@
 package com.zmy.util.component;
 
 
-import com.zmy.util.enums.AndOr;
-import com.zmy.util.enums.Bracket;
 import com.zmy.util.enums.ColumnOper;
 import com.zmy.util.enums.CondOper;
-import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @program: sql-generate-util
@@ -17,17 +12,35 @@ import java.util.Objects;
  * @author: zhangmy
  * @create: 2021-12-04 23:15
  */
-@Data
-public class Having<T> extends NodeComponent<Having<?>> implements INodeComponent<Having<?>> {
+public class Having extends NodeComponent<Having> {
 
     private String table;
     private String column;
     private ColumnOper columnOper;
     private CondOper condOper;
-    private T value;
+    private Object value;
 
+    public String getTable() {
+        return table;
+    }
 
-    public Having(String table, String column, ColumnOper columnOper, CondOper condOper, T value) {
+    public String getColumn() {
+        return column;
+    }
+
+    public ColumnOper getColumnOper() {
+        return columnOper;
+    }
+
+    public CondOper getCondOper() {
+        return condOper;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    private Having(String table, String column, ColumnOper columnOper, CondOper condOper, Object value) {
         this.brackets = new ArrayList<>();
         this.table = table;
         this.column = column;
@@ -50,5 +63,46 @@ public class Having<T> extends NodeComponent<Having<?>> implements INodeComponen
                 ", having=" + next +
                 '}';
     }
+
+    public static class HavingBuilder extends MemberCheck<Having,HavingBuilder> {
+
+        private String table;
+        private String column;
+        private ColumnOper columnOper = ColumnOper.NONE;
+        private CondOper condOper;
+        private Object value;
+
+        public HavingBuilder table(String table) {
+            this.table = table;
+            return this;
+        }
+        public HavingBuilder column(String column) {
+            this.column = column;
+            return this;
+        }
+        public HavingBuilder columnOper(ColumnOper columnOper) {
+            this.columnOper = columnOper;
+            return this;
+        }
+        public HavingBuilder condOper(CondOper condOper) {
+            this.condOper = condOper;
+            return this;
+        }
+        public HavingBuilder value(Object value) {
+            this.value = value;
+            return this;
+        }
+
+        public static HavingBuilder builder() {
+            return new HavingBuilder();
+        }
+
+        @Override
+        protected Having buildInstance() {
+            return new Having(table,column,columnOper,condOper,value);
+        }
+
+    }
+
 
 }
