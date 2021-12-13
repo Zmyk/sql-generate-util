@@ -1,8 +1,10 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
 
-import com.zmy.util.enums.ColumnOper;
-import com.zmy.util.enums.CondOper;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.ColumnOper;
+import com.zmy.util.query.enums.CondOper;
 
 import java.util.ArrayList;
 
@@ -64,7 +66,7 @@ public class Having extends NodeComponent<Having> {
                 '}';
     }
 
-    public static class HavingBuilder extends MemberCheck<Having,HavingBuilder> {
+    public static class HavingBuilder extends MemberCheck<Having> {
 
         private String table;
         private String column;
@@ -102,6 +104,27 @@ public class Having extends NodeComponent<Having> {
             return new Having(table,column,columnOper,condOper,value);
         }
 
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOk = true;
+            if (StrUtil.isEmpty(table)) {
+                isCheckOk = false;
+                errMsg+=("having条件table不能为null！");
+            }
+            if (StrUtil.isEmpty(column)) {
+                isCheckOk = false;
+                errMsg+=("having条件column不能为null！");
+            }
+            if (columnOper == null) {
+                isCheckOk = false;
+                errMsg+=("having条件columnOper不能为null！");
+            }
+            if (condOper == null) {
+                isCheckOk = false;
+                errMsg+=("having条件condOper不能为null！");
+            }
+            return isCheckOk;
+        }
     }
 
 

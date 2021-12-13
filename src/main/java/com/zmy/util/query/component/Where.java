@@ -1,8 +1,10 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
 
-import com.zmy.util.enums.ColumnOper;
-import com.zmy.util.enums.CondOper;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.ColumnOper;
+import com.zmy.util.query.enums.CondOper;
 
 import java.util.ArrayList;
 
@@ -64,7 +66,7 @@ public class Where extends NodeComponent<Where> {
                 '}';
     }
 
-    public static class WhereBuilder extends MemberCheck<Where,WhereBuilder> {
+    public static class WhereBuilder extends MemberCheck<Where> {
 
         private String table;
         private String column;
@@ -100,6 +102,24 @@ public class Where extends NodeComponent<Where> {
         @Override
         protected Where buildInstance() {
             return new Where(table, column, columnOper, condOper, value);
+        }
+
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOK = true;
+            if (StrUtil.isEmpty(table)) {
+                isCheckOK = false;
+                errMsg+=("where条件table不能为null！");
+            }
+            if (StrUtil.isEmpty(column)) {
+                isCheckOK = false;
+                errMsg+=("where条件column不能为null！");
+            }
+            if (condOper == null) {
+                isCheckOK = false;
+                errMsg+=("where条件condOper不能为null！");
+            }
+            return isCheckOK;
         }
     }
 

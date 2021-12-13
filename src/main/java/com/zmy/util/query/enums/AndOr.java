@@ -1,22 +1,22 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util
- * @description: 排序方式
+ * @description: 条件连接方式
  * @author: zhangmy
- * @create: 2021-12-04 23:18
+ * @create: 2021-12-04 23:16
  */
-public enum Order {
+public enum AndOr {
 
-    ASC(0,"ASC","升序"),
-    DESC(1,"DESC","降序")
+    AND(0," AND ","and连接符号"),
+    OR(1," OR ","or连接符号")
     ;
 
     private int code;
     private String sign;
     private String description;
 
-    Order(int code, String sign, String description) {
+    AndOr(int code, String sign, String description) {
         this.code = code;
         this.sign = sign;
         this.description = description;

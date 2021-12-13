@@ -1,22 +1,23 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util
- * @description: 条件连接方式
+ * @description: 表连接方式
  * @author: zhangmy
- * @create: 2021-12-04 23:16
+ * @create: 2021-12-04 23:18
  */
-public enum AndOr {
+public enum Join {
 
-    AND(0,"AND","and连接符号"),
-    OR(1,"OR","or连接符号")
+    LEFTJOIN(0," LEFT JOIN ","左连接"),
+    RIGHTJOIN(1," RIGHT JOIN ","右连接"),
+    INNERJOIN(2," INNER JOIN ","内连接")
     ;
 
     private int code;
     private String sign;
     private String description;
 
-    AndOr(int code, String sign, String description) {
+    Join(int code, String sign, String description) {
         this.code = code;
         this.sign = sign;
         this.description = description;

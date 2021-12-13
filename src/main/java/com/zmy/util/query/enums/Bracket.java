@@ -1,4 +1,4 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util

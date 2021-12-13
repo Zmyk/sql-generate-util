@@ -1,4 +1,4 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util
@@ -8,13 +8,13 @@ package com.zmy.util.enums;
  */
 public enum ColumnOper {
 
-    NONE(0,"NONE","取值不聚合"),
-    SUM(1,"SUM","求和"),
-    AVG(2,"AVG","求平均值"),
-    MAX(3,"MAX","最大值"),
-    MIN(4,"MIN","最小值"),
-    COUNT(5,"COUNT","统计"),
-    DATE_FORMAT(6,"DATE_FORMAT","日期格式化，固定格式化为 %Y-%m-%d 的格式");
+    NONE(0," NONE ","取值不聚合"),
+    SUM(1," SUM ","求和"),
+    AVG(2," AVG ","求平均值"),
+    MAX(3," MAX ","最大值"),
+    MIN(4," MIN ","最小值"),
+    COUNT(5," COUNT ","统计"),
+    DATE_FORMAT(6," DATE_FORMAT ","日期格式化，固定格式化为 %Y-%m-%d 的格式");
 
     private int code;
     private String sign;

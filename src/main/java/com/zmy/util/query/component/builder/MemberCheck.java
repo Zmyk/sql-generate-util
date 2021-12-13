@@ -1,4 +1,6 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component.builder;
+
+import com.zmy.util.query.component.builder.ComponentBuilder;
 
 /**
  * @program: sql-generate-util
@@ -6,13 +8,14 @@ package com.zmy.util.component;
  * @author: zhangmy
  * @create: 2021-12-11 23:02
  */
-public abstract class MemberCheck<T,E> implements ComponentBuilder<T,E> {
+public abstract class MemberCheck<T> implements ComponentBuilder<T> {
 
+    protected String errMsg = "";
 
     @Override
     public T build() {
         if (!isCheckOk()) {
-            throw new RuntimeException("On参数检查不合法！");
+            throw new RuntimeException("参数检查不合法！错误信息：[" + errMsg + "]");
         }
         return buildInstance();
     }

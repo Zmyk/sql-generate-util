@@ -46,4 +46,4 @@
  * @author: zhangmy
  * @create: 2021-12-09 16:34
  */
-package com.zmy.util.component;
+package com.zmy.util.query.component;

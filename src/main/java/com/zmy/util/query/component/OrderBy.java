@@ -1,6 +1,8 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
-import com.zmy.util.enums.Order;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.Order;
 
 /**
  * @program: sql-generate-util
@@ -41,7 +43,7 @@ public class OrderBy extends Component{
                 '}';
     }
 
-    public static class OrderByBuilder extends MemberCheck<OrderBy,OrderByBuilder> {
+    public static class OrderByBuilder extends MemberCheck<OrderBy> {
 
         private String table;
         private String column;
@@ -67,6 +69,24 @@ public class OrderBy extends Component{
         @Override
         protected OrderBy buildInstance() {
             return new OrderBy(table,column,order);
+        }
+
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOk = true;
+            if (StrUtil.isEmpty(table)) {
+                isCheckOk = false;
+                errMsg+=("order by 条件table不能为null！");
+            }
+            if (StrUtil.isEmpty(column)) {
+                isCheckOk = false;
+                errMsg+=("order by 条件column不能为null！");
+            }
+            if (order == null) {
+                isCheckOk = false;
+                errMsg+=("order by 条件order不能为null！");
+            }
+            return isCheckOk;
         }
     }
 

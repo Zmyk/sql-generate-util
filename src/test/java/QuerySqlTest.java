@@ -1,12 +1,12 @@
-package com.zmy.util;
-
 import cn.hutool.core.date.DateTime;
-import com.zmy.util.component.*;
-import com.zmy.util.enums.ColumnOper;
-import com.zmy.util.enums.CondOper;
-import com.zmy.util.enums.Order;
-import com.zmy.util.node.RuleNode;
-import com.zmy.util.node.RuleUtil;
+import com.zmy.util.query.QuerySql;
+import com.zmy.util.query.QuerySqlParser;
+import com.zmy.util.query.component.*;
+import com.zmy.util.query.enums.ColumnOper;
+import com.zmy.util.query.enums.CondOper;
+import com.zmy.util.query.enums.Order;
+import com.zmy.util.query.ext.RuleNode;
+import com.zmy.util.query.ext.RuleUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @author: zhangmy
  * @create: 2021-12-04 23:19
  */
-public class DynamicSqlTest {
+public class QuerySqlTest {
 
     @Test
     public void test01() throws Exception {
@@ -59,6 +59,7 @@ public class DynamicSqlTest {
         querySql.setHaving(
                 Having.HavingBuilder.builder().table("user").column("age").condOper(CondOper.GREATERTHAN).value(20).build()
                 .and(Having.HavingBuilder.builder().table("user").column("gender").condOper(CondOper.EQUAL).value("女").build())
+                .partOr(Having.HavingBuilder.builder().table("user").column("gg").condOper(CondOper.ISNULL).build())
 
         );
         //构造order by
@@ -69,7 +70,7 @@ public class DynamicSqlTest {
                         OrderBy.OrderByBuilder.builder().table("role").column("id").order(Order.DESC).build()
                 )
         );
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
+        System.out.println(QuerySqlParser.builder().parse(querySql));
     }
 
     @org.junit.Test
@@ -83,8 +84,9 @@ public class DynamicSqlTest {
         map.put("4", Where.WhereBuilder.builder().table("4").column("4").condOper(CondOper.EQUAL).value("4").build());
         Where where = RuleUtil.handler(ruleNode, map);
         QuerySql querySql = new QuerySql();
+        querySql.setFrom(From.FromBuilder.builder().table("s").build());
         querySql.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
+        System.out.println(QuerySqlParser.builder().parse(querySql));
 
     }
 
@@ -94,8 +96,9 @@ public class DynamicSqlTest {
                 .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
                 .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").columnOper(ColumnOper.DATE_FORMAT).condOper(CondOper.GREATERTHANOREQUAL).value(new DateTime()).build());
         QuerySql querySql = new QuerySql();
+        querySql.setFrom(From.FromBuilder.builder().table("s").build());
         querySql.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
+        System.out.println(QuerySqlParser.builder().parse(querySql));
     }
 
     @org.junit.Test
@@ -104,8 +107,9 @@ public class DynamicSqlTest {
                 .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
                 .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").condOper(CondOper.GREATERTHANOREQUAL).value(new DateTime()).build());
         QuerySql querySql = new QuerySql();
+        querySql.setFrom(From.FromBuilder.builder().table("s").build());
         querySql.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
+        System.out.println(QuerySqlParser.builder().parse(querySql));
     }
 
     @org.junit.Test
@@ -114,8 +118,9 @@ public class DynamicSqlTest {
                 .or(Where.WhereBuilder.builder().table("department").column("id").condOper(CondOper.EQUAL).value("de456852").build())
                 .partAnd(Where.WhereBuilder.builder().table("user").column("create_time").condOper(CondOper.ISNULL).build());
         QuerySql querySql = new QuerySql();
+        querySql.setFrom(From.FromBuilder.builder().table("s").build());
         querySql.setWhere(where);
-        System.out.println(DynamicSqlUtil.parseDynamicSqlParam(querySql));
+        System.out.println(QuerySqlParser.builder().parse(querySql));
     }
 
 }

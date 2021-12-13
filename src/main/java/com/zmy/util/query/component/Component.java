@@ -1,4 +1,4 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
 /**
  * @program: sql-generate-util

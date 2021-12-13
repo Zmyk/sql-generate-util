@@ -1,11 +1,13 @@
-package com.zmy.util;
+package com.zmy.util.query;
 
 
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zmy.util.component.*;
-import com.zmy.util.enums.*;
+import com.zmy.util.SqlKeyWord;
+import com.zmy.util.SqlParser;
+import com.zmy.util.query.component.*;
+import com.zmy.util.query.enums.*;
 
 import java.util.Date;
 import java.util.List;
@@ -13,52 +15,39 @@ import java.util.Objects;
 
 /**
  * @program: sql-generate-util
- * @description: 该类是解析DynamicSqlParam的工具类
+ * @description: 该类是解析Sql的工具类
  * @author: zhangmy
  * @create: 2021-12-04 23:11
  */
-public class DynamicSqlUtil {
+public class QuerySqlParser extends SqlParser<QuerySql> {
 
-    /**
-     * @Description: 解析动态sql参数
-     * @Param: [param]
-     * @return: java.lang.String
-     * @Author: zhangmy
-     * @Date: 2020/12/29
-     */
-    public static String parseDynamicSqlParam(QuerySql param) {
+    public static QuerySqlParser builder() {
+        return new QuerySqlParser();
+    }
+
+    public String parse(QuerySql param) {
         //select
-        StringBuilder result = new StringBuilder("select ");
+        StringBuilder result = new StringBuilder();
         List<Select> selects = param.getSelects();
         result.append(handlerSelects(selects));
         //from
-        result.append("from ");
         From from = param.getFrom();
         result.append(handlerFrom(from));
         //where
         Where where = param.getWhere();
-        if (where != null) {
-            result.append("where ")
-                    .append(handlerWhere(where));
-        }
+        result.append(handlerWhere(where));
         //group by
         List<GroupBy> groupBys = param.getGroupBys();
-        if (!CollectionUtil.isEmpty(groupBys)) {
-            result.append("GROUP BY ")
-                    .append(handlerGroupbys(groupBys));
-        }
+        result.append(handlerGroupBys(groupBys));
+
         //having
         Having having = param.getHaving();
-        if (having != null) {
-            result.append("HAVING ")
-                    .append(handlerHaving(having));
-        }
+        result.append(handlerHaving(having));
+
         //order by
         List<OrderBy> orderBys = param.getOrderBys();
-        if (!CollectionUtil.isEmpty(orderBys)) {
-            result.append("ORDER BY ")
-                    .append(handlerOrderbys(orderBys));
-        }
+        result.append(handlerOrderBys(orderBys));
+
         return new String(result);
     }
 
@@ -71,36 +60,21 @@ public class DynamicSqlUtil {
      */
     private static String handlerSelects(List<Select> selects){
         if (CollectionUtil.isEmpty(selects)) {
-            return " * ";
+            return SqlKeyWord.SELECT + SqlKeyWord.STAR;
         }
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder(SqlKeyWord.SELECT);
         for (int i = 0;i < selects.size();i++) {
             Select select = selects.get(i);
             String table = select.getTable();
             String column = select.getColumn();
             String alias = select.getAlias();
             ColumnOper columnOper = select.getColumnOper();
-            if (StrUtil.isEmpty(table)) {
-                throw new IllegalArgumentException("select 条件的table不能为空！");
-            }
-            if (StrUtil.isEmpty(column)) {
-                throw new IllegalArgumentException("select 条件的column不能为空！");
-            }
-            if (StrUtil.isEmpty(alias)) {
-                throw new IllegalArgumentException("select 条件的alias不能为空！");
-            }
-            if (columnOper == null) {
-                throw new IllegalArgumentException("select 条件的columnOper不能为空！");
-            }
             result.append(handlerColumnOperFormat(table,column,columnOper))
-                    .append(" as ")
+                    .append(SqlKeyWord.AS)
                     .append(addFullwidth(alias));
             if (i != selects.size() - 1) {
-                result.append(",");
-            }else {
-                result.append(" ");
+                result.append(SqlKeyWord.COMMA);
             }
-
         }
         return new String(result);
     }
@@ -114,27 +88,24 @@ public class DynamicSqlUtil {
      */
     private static String handlerFrom(From from) {
         if (Objects.isNull(from)) {
-            return " 黑人问号 ";
+            throw new IllegalArgumentException("QuerySql的From部分不能为null");
         }
-        StringBuilder result = new StringBuilder("");
-        while (from != null) {
+        StringBuilder result = new StringBuilder(SqlKeyWord.FROM);
+        while (!Objects.isNull(from)) {
             String table = from.getTable();
-            if (StrUtil.isEmpty(table)) {
-                throw new IllegalArgumentException("from 条件的table不能为null！");
-            }
             Join join = from.getJoin();
             On on = from.getOn();
-            if (join != null) {
-                result.append(" ").append(join.getSign()).append(" ");
+            if (!Objects.isNull(join)) {
+                result.append(join.getSign());
             }
-            result.append(addFullwidth(table)).append(" ");
+            result.append(addFullwidth(table));
             if (StrUtil.isNotBlank(from.getTableAlias())) {
-                result.append(" as ").append(from.getTableAlias());
+                result.append(SqlKeyWord.AS).append(from.getTableAlias());
             }
-            if (on != null) {
-                result.append(" on ");
+            if (!Objects.isNull(on)) {
+                result.append(SqlKeyWord.ON);
             }
-            while (on != null) {
+            while (!Objects.isNull(on)) {
                 List<Bracket> brackets = on.getBrackets();
                 AndOr andOr = on.getAndOr();
                 String table1 = on.getTable1();
@@ -142,45 +113,27 @@ public class DynamicSqlUtil {
                 CondOper condOper = on.getCondOper();
                 String table2 = on.getTable2();
                 String column2 = on.getColumn2();
-                if (StrUtil.isEmpty(table1)) {
-                    throw new IllegalArgumentException("on 条件table1不能为null");
-                }
-                if (StrUtil.isEmpty(column1)) {
-                    throw new IllegalArgumentException("on 条件column1不能为null");
-                }
-                if (condOper == null) {
-                    throw new IllegalArgumentException("on 条件condOper不能为null");
-                }
-                if (StrUtil.isEmpty(table2)) {
-                    throw new IllegalArgumentException("on 条件table2不能为null");
-                }
-                if (StrUtil.isEmpty(column2)) {
-                    throw new IllegalArgumentException("on 条件column2不能为null");
-                }
-                if (andOr != null) {
-                    result.append(andOr.getSign()).append(" ");
+                if (!Objects.isNull(andOr)) {
+                    result.append(andOr.getSign());
                 }
                 if (!CollectionUtil.isEmpty(brackets)) {
                     for (Bracket bracket : brackets) {
                         if (bracket.getCode() == Bracket.LEFTBRACKET.getCode()) {
-                            result.append(bracket.getSign())
-                                    .append(" ");
+                            result.append(bracket.getSign());
                         }
                     }
                 }
                 result.append(addFullwidth(table1))
-                        .append(".")
+                        .append(SqlKeyWord.POINT)
                         .append(addFullwidth(column1))
                         .append(condOper.getSign())
                         .append(addFullwidth(table2))
-                        .append(".")
-                        .append(addFullwidth(column2))
-                        .append(" ");
+                        .append(SqlKeyWord.POINT)
+                        .append(addFullwidth(column2));
                 if (!CollectionUtil.isEmpty(brackets)) {
                     for (Bracket bracket : brackets) {
                         if (bracket.getCode() == Bracket.RIGHTBRACKET.getCode()) {
-                            result.append(bracket.getSign())
-                                    .append(" ");
+                            result.append(bracket.getSign());
                         }
                     }
                 }
@@ -199,8 +152,11 @@ public class DynamicSqlUtil {
      * @Date: 2020/12/29
      */
     private static String handlerWhere(Where where) {
-        StringBuilder result = new StringBuilder("");
-        while (where != null) {
+        if (Objects.isNull(where)) {
+            return StrUtil.EMPTY;
+        }
+        StringBuilder result = new StringBuilder(SqlKeyWord.WHERE);
+        while (!Objects.isNull(where)) {
             List<Bracket> brackets = where.getBrackets();
             String table = where.getTable();
             String column = where.getColumn();
@@ -208,40 +164,23 @@ public class DynamicSqlUtil {
             CondOper condOper = where.getCondOper();
             Object value = where.getValue();
             AndOr andOr = where.getAndOr();
-            if (StrUtil.isEmpty(table)) {
-                throw new IllegalArgumentException("where条件table不能为null！");
-            }
-            if (StrUtil.isEmpty(column)) {
-                throw new IllegalArgumentException("where条件column不能为null！");
-            }
-            if (condOper == null) {
-                throw new IllegalArgumentException("where条件condOper不能为null！");
-            }
-//            if (value == null) {
-//                throw new IllegalArgumentException("where条件value不能为null！");
-//            }
             if (!Objects.isNull(andOr)) {
-                result.append(andOr.getSign()).append(" ");
+                result.append(andOr.getSign());
             }
             if (!CollectionUtil.isEmpty(brackets)) {
                 for (Bracket bracket : brackets) {
                     if (bracket.getCode() == Bracket.LEFTBRACKET.getCode()) {
-                        result.append(bracket.getSign())
-                                .append(" ");
+                        result.append(bracket.getSign());
                     }
                 }
             }
             result.append(handlerColumnOperFormat(table,column,columnOper))
-                    .append(" ")
                     .append(condOper.getSign())
-                    .append(" ")
-                    .append(handlerValueType(handlerValueFormat(condOper,value)))
-                    .append(" ");
+                    .append(handlerValueType(handlerValueFormat(condOper,value)));
             if (!CollectionUtil.isEmpty(brackets)) {
                 for (Bracket bracket : brackets) {
                     if (bracket.getCode() == Bracket.RIGHTBRACKET.getCode()) {
-                        result.append(bracket.getSign())
-                                .append(" ");
+                        result.append(bracket.getSign());
                     }
                 }
             }
@@ -259,12 +198,12 @@ public class DynamicSqlUtil {
      */
     private static String handlerColumnOperFormat(String table,String column,ColumnOper columnOper) {
         if (ColumnOper.DATE_FORMAT.equals(columnOper)) {
-            return "DATE_FORMAT(" + addFullwidth(table) + "." + addFullwidth(column) + ",'%Y-%m-%d')";
+            return "DATE_FORMAT(" + addFullwidth(table) + SqlKeyWord.POINT + addFullwidth(column) + ",'%Y-%m-%d')";
         }
         if (ColumnOper.NONE.equals(columnOper)) {
-            return addFullwidth(table) + "." + addFullwidth(column);
+            return addFullwidth(table) + SqlKeyWord.POINT + addFullwidth(column);
         }
-        return columnOper.getSign() + "(" + addFullwidth(table) +"."+ addFullwidth(column) + ")";
+        return columnOper.getSign() + "(" + addFullwidth(table) +SqlKeyWord.POINT+ addFullwidth(column) + ")";
     }
 
     /**
@@ -291,19 +230,20 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerGroupbys(List<GroupBy> groupBys) {
-        StringBuilder result = new StringBuilder("");
+    private static String handlerGroupBys(List<GroupBy> groupBys) {
+        if (CollectionUtil.isEmpty(groupBys)) {
+            return StrUtil.EMPTY;
+        }
+        StringBuilder result = new StringBuilder(SqlKeyWord.GROUP_BY);
         for (int i = 0; i < groupBys.size(); i++) {
             GroupBy groupBy = groupBys.get(i);
             String table = groupBy.getTable();
             String column = groupBy.getColumn();
             result.append(addFullwidth(table))
-                    .append(".")
+                    .append(SqlKeyWord.POINT)
                     .append(addFullwidth(column));
             if (i != groupBys.size() - 1) {
-                result.append(",");
-            }else {
-                result.append(" ");
+                result.append(SqlKeyWord.COMMA);
             }
         }
         return new String(result);
@@ -317,10 +257,11 @@ public class DynamicSqlUtil {
      * @Date: 2020/12/29
      */
     private static String handlerHaving(Having having) {
-
-        StringBuilder result = new StringBuilder("");
-
-        while (having != null) {
+        if (Objects.isNull(having)) {
+            return StrUtil.EMPTY;
+        }
+        StringBuilder result = new StringBuilder(SqlKeyWord.HAVING);
+        while (!Objects.isNull(having)) {
             List<Bracket> brackets = having.getBrackets();
             String table = having.getTable();
             String column = having.getColumn();
@@ -328,55 +269,23 @@ public class DynamicSqlUtil {
             CondOper condOper = having.getCondOper();
             Object value = having.getValue();
             AndOr andOr = having.getAndOr();
-            if (StrUtil.isEmpty(table)) {
-                throw new IllegalArgumentException("having条件table不能为null！");
-            }
-            if (StrUtil.isEmpty(column)) {
-                throw new IllegalArgumentException("having条件column不能为null！");
-            }
-            if (columnOper == null) {
-                throw new IllegalArgumentException("having条件columnOper不能为null！");
-            }
-            if (condOper == null) {
-                throw new IllegalArgumentException("having条件condOper不能为null！");
-            }
-            if (value == null) {
-                throw new IllegalArgumentException("having条件value不能为null！");
-            }
-            if (andOr != null) {
-                result.append(andOr.getSign()).append(" ");
+            if (!Objects.isNull(andOr)) {
+                result.append(andOr.getSign());
             }
             if (!CollectionUtil.isEmpty(brackets)) {
                 for (Bracket bracket : brackets) {
                     if (bracket.getCode() == Bracket.LEFTBRACKET.getCode()) {
-                        result.append(bracket.getSign())
-                                .append(" ");
+                        result.append(bracket.getSign());
                     }
                 }
             }
-            if (columnOper.getCode() == ColumnOper.NONE.getCode()) {
-                result.append(addFullwidth(table))
-                        .append(".")
-                        .append(addFullwidth(column))
-                        .append(condOper.getSign())
-                        .append(handlerValueType(value))
-                        .append(" ");
-            }else {
-                result.append(columnOper.getSign())
-                        .append("(")
-                        .append(addFullwidth(table))
-                        .append(".")
-                        .append(addFullwidth(column))
-                        .append(")")
-                        .append(condOper.getSign())
-                        .append(handlerValueType(value))
-                        .append(" ");
-            }
+            result.append(handlerColumnOperFormat(table,column,columnOper))
+                    .append(condOper.getSign())
+                    .append(handlerValueType(handlerValueFormat(condOper,value)));
             if (!CollectionUtil.isEmpty(brackets)) {
                 for (Bracket bracket : brackets) {
                     if (bracket.getCode() == Bracket.RIGHTBRACKET.getCode()) {
-                        result.append(bracket.getSign())
-                                .append(" ");
+                        result.append(bracket.getSign());
                     }
                 }
             }
@@ -392,55 +301,25 @@ public class DynamicSqlUtil {
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
-    private static String handlerOrderbys(List<OrderBy> orderBys) {
-        StringBuilder result = new StringBuilder("");
-
+    private static String handlerOrderBys(List<OrderBy> orderBys) {
+        if (CollectionUtil.isEmpty(orderBys)) {
+            return StrUtil.EMPTY;
+        }
+        StringBuilder result = new StringBuilder(SqlKeyWord.ORDER_BY);
         for (int i = 0; i < orderBys.size(); i++) {
             OrderBy orderBy = orderBys.get(i);
             String table = orderBy.getTable();
             String column = orderBy.getColumn();
             Order order = orderBy.getOrder();
-            if (StrUtil.isEmpty(table)) {
-                throw new IllegalArgumentException("order by 条件table不能为null！");
-            }
-            if (StrUtil.isEmpty(column)) {
-                throw new IllegalArgumentException("order by 条件column不能为null！");
-            }
-            if (order == null) {
-                throw new IllegalArgumentException("order by 条件order不能为null！");
-            }
             result.append(addFullwidth(table))
-                    .append(".")
+                    .append(SqlKeyWord.POINT)
                     .append(addFullwidth(column))
-                    .append(" ")
                     .append(order.getSign());
             if (i != orderBys.size() - 1) {
-                result.append(",");
+                result.append(SqlKeyWord.COMMA);
             }
         }
         return new String(result);
-    }
-
-    /**
-     * @Description: 添加漂
-     * @Param: [string]
-     * @return: java.lang.String
-     * @Author: zhangmy
-     * @Date: 2020/12/29
-     */
-    private static String addFullwidth(String string) {
-        return "`" + string + "`";
-    }
-
-    /**
-     * @Description: 添加单引号
-     * @Param: [string]
-     * @return: java.lang.String
-     * @Author: zhangmy
-     * @Date: 2020/12/30
-     */
-    private static String addSingleQuotes(String string) {
-        return "'" + string + "'";
     }
 
     /**

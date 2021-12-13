@@ -1,23 +1,22 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util
- * @description: 表连接方式
+ * @description: 排序方式
  * @author: zhangmy
  * @create: 2021-12-04 23:18
  */
-public enum Join {
+public enum Order {
 
-    LEFTJOIN(0,"LEFT JOIN","左连接"),
-    RIGHTJOIN(1,"RIGHT JOIN","右连接"),
-    INNERJOIN(2,"INNER JOIN","内连接")
+    ASC(0," ASC ","升序"),
+    DESC(1," DESC ","降序")
     ;
 
     private int code;
     private String sign;
     private String description;
 
-    Join(int code, String sign, String description) {
+    Order(int code, String sign, String description) {
         this.code = code;
         this.sign = sign;
         this.description = description;

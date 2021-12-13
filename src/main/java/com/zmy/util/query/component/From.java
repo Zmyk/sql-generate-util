@@ -1,6 +1,8 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
-import com.zmy.util.enums.Join;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.Join;
 
 /**
  * @program: sql-generate-util
@@ -109,7 +111,7 @@ public class From extends Component{
         return this;
     }
 
-    public static class FromBuilder extends MemberCheck<From,FromBuilder> {
+    public static class FromBuilder extends MemberCheck<From> {
 
         private String table;
         private String tableAlias;
@@ -133,6 +135,15 @@ public class From extends Component{
             return new From(table,tableAlias);
         }
 
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOK = true;
+            if (StrUtil.isEmpty(table)) {
+                isCheckOK = false;
+                errMsg += ("from 条件的table不能为null！");
+            }
+            return isCheckOK;
+        }
     }
 
 

@@ -1,7 +1,7 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
-import com.zmy.util.enums.AndOr;
-import com.zmy.util.enums.Bracket;
+import com.zmy.util.query.enums.AndOr;
+import com.zmy.util.query.enums.Bracket;
 
 import java.util.List;
 import java.util.Objects;

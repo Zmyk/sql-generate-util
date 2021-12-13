@@ -1,6 +1,6 @@
-package com.zmy.util.node;
+package com.zmy.util.query.ext;
 
-import com.zmy.util.component.Where;
+import com.zmy.util.query.component.Where;
 
 /**
  * @ClassName: Node

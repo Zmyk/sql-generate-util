@@ -1,7 +1,9 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
 
-import com.zmy.util.enums.CondOper;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.CondOper;
 
 import java.util.ArrayList;
 
@@ -63,7 +65,7 @@ public class On extends NodeComponent<On> {
                 '}';
     }
 
-    public static class OnBuilder extends MemberCheck<On,OnBuilder> {
+    public static class OnBuilder extends MemberCheck<On> {
 
         private String table1;
         private String column1;
@@ -105,6 +107,31 @@ public class On extends NodeComponent<On> {
             return new On(table1,column1,condOper,table2,column2);
         }
 
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOK = true;
+            if (StrUtil.isEmpty(table1)) {
+                isCheckOK = false;
+                errMsg+=("on 条件table1不能为null");
+            }
+            if (StrUtil.isEmpty(column1)) {
+                isCheckOK = false;
+                errMsg+=("on 条件column1不能为null");
+            }
+            if (condOper == null) {
+                isCheckOK = false;
+                errMsg+=("on 条件condOper不能为null");
+            }
+            if (StrUtil.isEmpty(table2)) {
+                isCheckOK = false;
+                errMsg+=("on 条件table2不能为null");
+            }
+            if (StrUtil.isEmpty(column2)) {
+                isCheckOK = false;
+                errMsg+=("on 条件column2不能为null");
+            }
+            return isCheckOK;
+        }
     }
 
 

@@ -1,6 +1,10 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
 
-import com.zmy.util.enums.ColumnOper;
+import cn.hutool.core.util.StrUtil;
+import com.zmy.util.query.component.builder.MemberCheck;
+import com.zmy.util.query.enums.ColumnOper;
+
+import java.util.Objects;
 
 /**
  * @program: sql-generate-util
@@ -48,7 +52,7 @@ public class Select extends Component{
                 '}';
     }
 
-    public static class SelectBuilder extends MemberCheck<Select,SelectBuilder>{
+    public static class SelectBuilder extends MemberCheck<Select> {
 
         private String table;
         private String column;
@@ -84,6 +88,27 @@ public class Select extends Component{
             return new Select(table,column,alias,columnOper);
         }
 
+        @Override
+        protected boolean isCheckOk() {
+            boolean isCheckOK = true;
+            if (StrUtil.isEmpty(table)) {
+                isCheckOK = false;
+                this.errMsg += "select 条件的table不能为空！";
+            }
+            if (StrUtil.isEmpty(column)) {
+                isCheckOK = false;
+                this.errMsg += "select 条件的column不能为空！";
+            }
+            if (StrUtil.isEmpty(alias)) {
+                isCheckOK = false;
+                this.errMsg += "select 条件的alias不能为空！";
+            }
+            if (Objects.isNull(columnOper)) {
+                isCheckOK = false;
+                this.errMsg += "select 条件的columnOper不能为空！";
+            }
+            return isCheckOK;
+        }
     }
 
 }

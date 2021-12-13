@@ -1,6 +1,7 @@
-package com.zmy.util;
+package com.zmy.util.query;
 
-import com.zmy.util.component.*;
+import com.zmy.util.Sql;
+import com.zmy.util.query.component.*;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author: zhangmy
  * @create: 2021-12-04 23:12
  */
-public class QuerySql implements Sql{
+public class QuerySql implements Sql {
 
     private List<Select> selects;
 

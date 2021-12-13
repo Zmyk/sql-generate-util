@@ -1,4 +1,6 @@
-package com.zmy.util.component;
+package com.zmy.util.query.component;
+
+import com.zmy.util.query.component.builder.MemberCheck;
 
 /**
  * @program: sql-generate-util
@@ -32,7 +34,7 @@ public class GroupBy extends Component{
                 '}';
     }
 
-    public static class GroupByBuilder extends MemberCheck<GroupBy,GroupByBuilder> {
+    public static class GroupByBuilder extends MemberCheck<GroupBy> {
 
         private String table;
         private String column;

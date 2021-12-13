@@ -1,4 +1,4 @@
-package com.zmy.util.enums;
+package com.zmy.util.query.enums;
 
 /**
  * @program: sql-generate-util
@@ -8,15 +8,15 @@ package com.zmy.util.enums;
  */
 public enum CondOper {
 
-    GREATERTHAN(0,">","大于"),
-    GREATERTHANOREQUAL(1,">=","大于等于"),
-    LESSTHAN(2,"<","小于"),
-    LESSTHANOREQUAL(3,"<=","小于等于"),
-    EQUAL(4,"=","等于"),
-    UNEQUAL(5,"!=","不等于"),
-    LIKE(6,"like","类似于"),
-    NOTLIKE(7,"not like","不包含"),
-    ISNULL(8,"is null","为空")
+    GREATERTHAN(0," > ","大于"),
+    GREATERTHANOREQUAL(1," >= ","大于等于"),
+    LESSTHAN(2," < ","小于"),
+    LESSTHANOREQUAL(3," <= ","小于等于"),
+    EQUAL(4," = ","等于"),
+    UNEQUAL(5," != ","不等于"),
+    LIKE(6," like ","类似于"),
+    NOTLIKE(7," not like ","不包含"),
+    ISNULL(8," is null ","为空")
     ;
 
     private int code;
