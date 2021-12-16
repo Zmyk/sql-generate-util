@@ -58,7 +58,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T and(T t) throws Exception {
+    public T and(T t)  {
         if (!Objects.isNull(t)) {
             this.connect(t,AndOr.AND);
         }
@@ -70,7 +70,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T andPart(T t) throws Exception {
+    public T andPart(T t)  {
         if (!Objects.isNull(t)) {
             this.connectPart(t,AndOr.AND);
         }
@@ -82,7 +82,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T partAnd(T t) throws Exception {
+    public T partAnd(T t)  {
         if (!Objects.isNull(t)) {
             this.partConnect(t,AndOr.AND);
         }
@@ -94,7 +94,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T partAndPart(T t) throws Exception {
+    public T partAndPart(T t)  {
         if (!Objects.isNull(t)) {
             this.partConnectPart(t,AndOr.AND);
         }
@@ -106,7 +106,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T or(T t) throws Exception {
+    public T or(T t)  {
         if (!Objects.isNull(t)) {
             this.connect(t, AndOr.OR);
         }
@@ -118,7 +118,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T orPart(T t) throws Exception {
+    public T orPart(T t)  {
         if (!Objects.isNull(t)) {
             this.connectPart(t,AndOr.OR);
         }
@@ -130,7 +130,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T partOr(T t) throws Exception {
+    public T partOr(T t)  {
         if (!Objects.isNull(t)) {
             this.partConnect(t,AndOr.OR);
         }
@@ -142,7 +142,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    public T partOrPart(T t) throws Exception {
+    public T partOrPart(T t)  {
         if (!Objects.isNull(t)) {
             this.partConnectPart(t,AndOr.OR);
         }
@@ -155,7 +155,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t andOr
      * @return
      */
-    private T connect(T t,AndOr andOr) throws Exception {
+    private T connect(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
             t.setAndOr(andOr);
             this.getLast().setNext(t);
@@ -169,7 +169,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    private T partConnect(T t,AndOr andOr) throws Exception {
+    private T partConnect(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
             this.addPreBracket();
             this.connect(t, andOr);
@@ -182,7 +182,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    private T connectPart(T t,AndOr andOr) throws Exception {
+    private T connectPart(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
             this.addNextBracket(t);
             this.connect(t, andOr);
@@ -195,7 +195,7 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * @param t
      * @return
      */
-    private T partConnectPart(T t,AndOr andOr) throws Exception {
+    private T partConnectPart(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
             this.addPreBracket();
             this.addNextBracket(t);
@@ -208,9 +208,9 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * this加整体括号。
      * 需要注意：一般情况下要在做连接之前调用该方法，
      *          连接过后this结构发生改变，再调用该方法可能会出现意想不到的结果
-     * @throws Exception
+     * @
      */
-    private void addPreBracket() throws Exception {
+    private void addPreBracket()  {
         this.getBrackets().add(Bracket.LEFTBRACKET);
         this.getTheLastNode((T)this).getBrackets().add(Bracket.RIGHTBRACKET);
     }
@@ -218,9 +218,9 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
     /**
      * 参数方加整体括号
      * @param t
-     * @throws Exception
+     * @
      */
-    private void addNextBracket(T t) throws Exception {
+    private void addNextBracket(T t)  {
         t.getBrackets().add(Bracket.LEFTBRACKET);
         this.getTheLastNode(t).getBrackets().add(Bracket.RIGHTBRACKET);
     }
@@ -230,9 +230,9 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
      * 每次做组件操作都会调用该方法，故在此方法中做接口泛型的类型检查
      * @param t
      * @return
-     * @throws Exception
+     * @
      */
-    private T getTheLastNode(T t) throws Exception {
+    private T getTheLastNode(T t)  {
         typeCheck(t);
         while (!Objects.isNull(t)) {
             if (Objects.isNull(t.getNext())) {
@@ -245,13 +245,13 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
     /**
      * 接口泛型的类型检查，避免做强制类型转换时得到错误的结果
      * @param t
-     * @throws Exception
+     * @
      */
-    private void typeCheck(T t) throws Exception {
+    private void typeCheck(T t) {
         Class<? extends NodeComponent> aClass = this.getClass();
         Class<?> aClass1 = t.getClass();
         if (!aClass.equals(aClass1)) {
-            throw new Exception("INodeComponent接口不能这样用，接口泛型应使用子类本身！但是[" + aClass1.toString()
+            throw new RuntimeException("INodeComponent接口不能这样用，接口泛型应使用子类本身！但是[" + aClass1.toString()
                     + "]在定义时却使用了类型[" + aClass1.toString());
         }
     }
