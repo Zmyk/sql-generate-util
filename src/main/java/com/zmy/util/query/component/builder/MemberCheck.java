@@ -22,7 +22,6 @@ public abstract class MemberCheck<T> implements ComponentBuilder<T> {
 
     /**
      * 成员合法性检查
-     * @return
      */
     protected boolean isCheckOk(){
         return true;

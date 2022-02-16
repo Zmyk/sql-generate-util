@@ -53,8 +53,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 拼接select部分
-     * @Param: [selects]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -81,8 +79,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 解析from部分
-     * @Param: [froms]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -146,8 +142,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 解析where部分
-     * @Param: [where]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -191,8 +185,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 处理不同的聚合操作表现。比如：date_format，需要处理成 date_format(table.column,'%Y-%m-%d')
-     * @Param: []
-     * @return: void
      * @Author: zhangmy
      * @Date: 2021/1/21 14:45
      */
@@ -208,8 +200,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 处理不同的操作符号时，值的表现。比如：like，需要在value前后加 ‘%’
-     * @Param: []
-     * @return: void
      * @Author: zhangmy
      * @Date: 2021/1/21 14:45
      */
@@ -225,8 +215,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 解析group by部分
-     * @Param: [groupBys]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -251,8 +239,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 解析having部分
-     * @Param: [having]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -296,8 +282,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 解析order by部分
-     * @Param: [orderBys]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -324,8 +308,6 @@ public class QuerySqlParser extends SqlParser<QuerySql> {
 
     /**
      * @Description: 处理值类型表现
-     * @Param: [value]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/30
      */

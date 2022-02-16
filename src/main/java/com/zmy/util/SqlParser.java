@@ -10,8 +10,6 @@ public abstract class SqlParser<T extends Sql> {
 
     /**
      * @Description: 解析动态sql参数
-     * @Param: [param]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -19,8 +17,6 @@ public abstract class SqlParser<T extends Sql> {
 
     /**
      * @Description: 添加漂
-     * @Param: [string]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/29
      */
@@ -30,8 +26,6 @@ public abstract class SqlParser<T extends Sql> {
 
     /**
      * @Description: 添加单引号
-     * @Param: [string]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2020/12/30
      */

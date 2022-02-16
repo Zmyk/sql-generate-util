@@ -10,7 +10,6 @@ public interface ComponentBuilder<T> {
 
     /**
      * 构建实例
-     * @return
      */
     T build();
 

@@ -26,8 +26,6 @@ public class RuleUtil {
 
     /**
      * @Description: 重组链表，每次处理一个节点。具体操作为将原节点分割为2，替换原节点连接到链表上，
-     * @Param: [firstNode, splitStr, connectStr]
-     * @return: com.team.module.ucrud.crud.Node
      * @Author: zhangmy
      * @Date: 2021/2/22 14:31
      */
@@ -73,8 +71,6 @@ public class RuleUtil {
 
     /**
      * @Description: 解析重组后的链表，将节点合并后返回最终合并的where
-     * @Param: [firstNode]
-     * @return: java.lang.String
      * @Author: zhangmy
      * @Date: 2021/2/22 15:12//当前节点的where已经合并到前一个节点，删除当前节点，删除前节点的一个左括号，删除后节点的一个右括号
      */

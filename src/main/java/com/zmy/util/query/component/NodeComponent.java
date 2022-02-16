@@ -55,8 +55,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
     //start----继承给子类向外提供的方法
     /**
      * 按照and方式做连接操作
-     * @param t
-     * @return
      */
     public T and(T t)  {
         if (!Objects.isNull(t)) {
@@ -67,8 +65,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照and方式做连接操作，参数组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T andPart(T t)  {
         if (!Objects.isNull(t)) {
@@ -79,8 +75,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照and方式做连接操作，调用方组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T partAnd(T t)  {
         if (!Objects.isNull(t)) {
@@ -91,8 +85,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照and方式做连接操作，调用方和参数组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T partAndPart(T t)  {
         if (!Objects.isNull(t)) {
@@ -103,8 +95,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照or方式做连接操作
-     * @param t
-     * @return
      */
     public T or(T t)  {
         if (!Objects.isNull(t)) {
@@ -115,8 +105,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照or方式做连接操作，参数组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T orPart(T t)  {
         if (!Objects.isNull(t)) {
@@ -127,8 +115,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照or方式做连接操作，调用方组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T partOr(T t)  {
         if (!Objects.isNull(t)) {
@@ -139,8 +125,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 按照or方式做连接操作，调用方和参数组件部分作为一个整体加括号
-     * @param t
-     * @return
      */
     public T partOrPart(T t)  {
         if (!Objects.isNull(t)) {
@@ -152,8 +136,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 1、连接节点  2、调整对象内部结构：设置连接方式、记录最后一个节点
-     * @param t andOr
-     * @return
      */
     private T connect(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
@@ -166,8 +148,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 调用方作为一个整体做连接，1、节点连接  2、调用方加括号
-     * @param t
-     * @return
      */
     private T partConnect(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
@@ -179,8 +159,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 参数作为一个整体做连接，1、节点连接  2、参数加括号
-     * @param t
-     * @return
      */
     private T connectPart(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
@@ -192,8 +170,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
 
     /**
      * 调用方和参数作为两个整体做连接，1、节点连接  2、调用方和参数加括号
-     * @param t
-     * @return
      */
     private T partConnectPart(T t,AndOr andOr)  {
         if (!Objects.isNull(t)) {
@@ -228,8 +204,6 @@ public class NodeComponent<T extends NodeComponent<T>> extends Component{
     /**
      * 获取指定类型、指定链表的最后一个节点。
      * 每次做组件操作都会调用该方法，故在此方法中做接口泛型的类型检查
-     * @param t
-     * @return
      * @
      */
     private T getTheLastNode(T t)  {
