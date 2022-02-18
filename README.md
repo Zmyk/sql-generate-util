@@ -6,7 +6,7 @@
 #### 使用说明
 拉取项目源码，使用maven将jar安装到本地仓库。在pom文件中引入gav，即可使用。
 
-使用示例
+下面列举了5个使用示例
 ```java
 public class QuerySqlTest {
 
